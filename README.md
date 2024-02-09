@@ -12,12 +12,15 @@ erDiagram
     
     SERVICE {
         INTEGER id PK
+        INTEGER active
+        TEXT frequency
         TEXT name
     }
     
     BOLETO {
         INTEGER id PK
-        INTEGER due_date_ts
+        INTEGER issue_ts
+        INTEGER expiry_ts
         BLOB file
     }
 
@@ -30,7 +33,7 @@ erDiagram
     PAYMENT {
         INTEGER boleto_id PK, FK
         INTEGER person_id PK, FK
-        INTEGER payment_date_ts
+        INTEGER ts
     }
     
     PERSON {
@@ -38,9 +41,15 @@ erDiagram
         TEXT name
     }
 
+    REIMBURSEMENT {
+        INTEGER boleto_id PK, FK
+        INTEGER from_id PK, FK
+        INTEGER to_id PK, FK
+    }
+
     SERVICE ||--o{ BOLETO : issues
-    BOLETO }o--|{ CHARGE : inflicts
-    CHARGE }o--|{ PERSON : "is meant for"
-    PERSON |o--o{ PAYMENT : makes
-    PAYMENT |o--o{ BOLETO : covers
+    BOLETO ||--o{ CHARGE : inflicts
+    CHARGE }o--|| PERSON : "is meant for"
+    PERSON ||--o{ PAYMENT : makes
+    PAYMENT |o--|| BOLETO : covers
 ```
