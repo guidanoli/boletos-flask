@@ -9,7 +9,10 @@ freq2str = {'M': 'Mensal', 'Y': 'Anual'}
 @bp.route('/')
 def index():
     db = get_db()
-    services = db.execute('SELECT * FROM service').fetchall()
+    services = db.execute(
+        'SELECT name, freq FROM service'
+        ' ORDER BY name'
+    ).fetchall()
     return render_template('services/index.html', services=services, freq2str=freq2str)
 
 @bp.route('/register', methods=('GET', 'POST'))

@@ -15,7 +15,7 @@
     {% for service in services %}
     <tr>
         <td>{{ service['name'] }}</td>
-        <td>{{ freq2str[service['freq']] }}</td>
+        <td><div align="center">{{ freq2str[service['freq']] }}</div></td>
     </tr>
     {% endfor %}
 </table>
