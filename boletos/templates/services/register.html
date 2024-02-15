@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Novo serviço{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <label for="name">Nome</label>
+    <input name="name" value="{{ request.form['name'] }}" required><br/>
+    <label for="freq">Frequência</label>
+    <select name="freq" required>
+        <option value="M" selected>Mensal</option>
+        <option value="Y">Anual</option>
+    </select><br/>
+    <input type="submit" value="Cadastrar">
+</form>
+{% endblock %}

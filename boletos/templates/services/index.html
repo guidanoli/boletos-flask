@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Serviços{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('services.register') }}">Novo serviço</a>
+{% endblock %}

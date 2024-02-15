@@ -31,4 +31,8 @@ def create_app(test_config=None):
     def home():
         return render_template('home.html')
 
+    from . import services
+
+    app.register_blueprint(services.bp)
+
     return app
