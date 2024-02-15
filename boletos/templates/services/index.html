@@ -5,5 +5,18 @@
 {% endblock %}
 
 {% block content %}
-<a href="{{ url_for('services.register') }}">Novo serviço</a>
+<a href="{{ url_for('services.register') }}">Novo serviço</a><br/>
+<br/>
+<table>
+    <tr>
+        <th>Nome</th>
+        <th>Frequência</th>
+    </tr>
+    {% for service in services %}
+    <tr>
+        <td>{{ service['name'] }}</td>
+        <td>{{ freq2str[service['freq']] }}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}

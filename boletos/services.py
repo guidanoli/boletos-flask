@@ -4,9 +4,13 @@ from boletos.db import get_db
 
 bp = Blueprint('services', __name__, url_prefix='/services')
 
+freq2str = {'M': 'Mensal', 'Y': 'Anual'}
+
 @bp.route('/')
 def index():
-    return render_template('services/index.html')
+    db = get_db()
+    services = db.execute('SELECT * FROM service').fetchall()
+    return render_template('services/index.html', services=services, freq2str=freq2str)
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
