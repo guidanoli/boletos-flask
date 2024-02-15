@@ -1,7 +1,8 @@
-DROP TABLE IF EXISTS business;
+DROP TABLE IF EXISTS service;
 
-CREATE TABLE business (
+CREATE TABLE service (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
-  image BLOB
+  freq TEXT NOT NULL,
+  active INTEGER
 );
