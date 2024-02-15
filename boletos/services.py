@@ -4,15 +4,6 @@ from boletos.db import get_db
 
 bp = Blueprint('services', __name__, url_prefix='/services')
 
-@bp.route('/')
-def index():
-    db = get_db()
-    services = db.execute(
-        'SELECT name FROM service'
-        ' ORDER BY name'
-    ).fetchall()
-    return render_template('services/index.html', services=services)
-
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -33,7 +24,7 @@ def register():
             except db.IntegrityError:
                 error = 'Um serviço com esse nome já existe.'
             else:
-                return redirect(url_for('services.index'))
+                return redirect(url_for('home'))
 
         flash(error)
 
