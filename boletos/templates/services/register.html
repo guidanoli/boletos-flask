@@ -6,13 +6,9 @@
 
 {% block content %}
 <form method="post">
-    <label for="name">Nome</label>
+    <label for="name">Nome:</label>
     <input name="name" value="{{ request.form['name'] }}" required><br/>
-    <label for="freq">Frequência</label>
-    <select name="freq" required>
-        <option value="M" selected>Mensal</option>
-        <option value="Y">Anual</option>
-    </select><br/>
+    <br/>
     <input type="submit" value="Cadastrar">
 </form>
 {% endblock %}
