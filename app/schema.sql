@@ -3,5 +3,5 @@ DROP TABLE IF EXISTS business;
 CREATE TABLE business (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
-  image BLOB NOT NULL
+  image BLOB
 );
