@@ -22,16 +22,9 @@ Attributes are typed as `sqlite3` storage classes.
 ```mermaid
 erDiagram
 
-    BUSINESS {
-        INTEGER id PK
-        TEXT name
-        BLOB image
-    }
-    
     SERVICE {
         INTEGER id PK
-        INTEGER business_id PK, FK
-        TEXT desc
+        TEXT name
         TEXT freq
         INTEGER active
     }
@@ -61,10 +54,9 @@ erDiagram
         INTEGER ts
     }
 
-    BUSINESS ||--o{ SERVICE : offers
     SERVICE ||--o{ BOLETO : issues
     BOLETO ||--o{ CHARGE : inflicts
-    CHARGE }o--|| PERSON : for
+    CHARGE }o--|| PERSON : on
     PERSON ||--o{ PAYMENT : makes
     PAYMENT }o--|| BOLETO : covers
 ```
