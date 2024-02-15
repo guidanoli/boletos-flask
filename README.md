@@ -9,12 +9,19 @@ Attributes are typed as `sqlite3` storage classes.
 
 ```mermaid
 erDiagram
+
+    BUSINESS {
+        INTEGER id PK
+        TEXT name
+        BLOB image
+    }
     
     SERVICE {
         INTEGER id PK
+        INTEGER business_id PK, FK
+        TEXT desc
+        TEXT freq
         INTEGER active
-        TEXT frequency
-        TEXT name
     }
     
     BOLETO {
@@ -24,32 +31,28 @@ erDiagram
         BLOB file
     }
 
-    CHARGE {
-        INTEGER boleto_id PK, FK
-        INTEGER person_id PK, FK
-        REAL amount
-    }
-
-    PAYMENT {
-        INTEGER boleto_id PK, FK
-        INTEGER person_id PK, FK
-        INTEGER ts
-    }
-    
     PERSON {
         INTEGER id PK
         TEXT name
     }
 
-    REIMBURSEMENT {
+    CHARGE {
         INTEGER boleto_id PK, FK
-        INTEGER from_id PK, FK
-        INTEGER to_id PK, FK
+        INTEGER person_id PK, FK
+        INTEGER amount
     }
 
+    PAYMENT {
+        INTEGER boleto_id PK, FK
+        INTEGER person_id PK, FK
+        INTEGER amount
+        INTEGER ts
+    }
+
+    BUSINESS ||--o{ SERVICE : offers
     SERVICE ||--o{ BOLETO : issues
     BOLETO ||--o{ CHARGE : inflicts
-    CHARGE }o--|| PERSON : "is meant for"
+    CHARGE }o--|| PERSON : for
     PERSON ||--o{ PAYMENT : makes
-    PAYMENT |o--|| BOLETO : covers
+    PAYMENT }o--|| BOLETO : covers
 ```
