@@ -3,6 +3,10 @@
 "Boleto" is a common billing system used in Brazil.
 This project aims to organize boletos and their payments.
 
+## Dependencies
+
+- Python 3.11 with `sqlite3` built-in
+
 ## Setup
 
 ```sh
