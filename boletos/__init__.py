@@ -9,6 +9,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'boletos.sqlite'),
+        UPLOADS_DIR=os.path.join(app.instance_path, 'uploads'),
         MAX_CONTENT_LENGTH=2**24, # 16 MB
     )
 
@@ -22,6 +23,12 @@ def create_app(test_config=None):
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    # ensure the uploads folder exists
+    try:
+        os.makedirs(app.config['UPLOADS_DIR'])
     except OSError:
         pass
 
