@@ -94,7 +94,7 @@ def register(service_id):
         except FlashMessage as e:
             flash(*e.args)
         else:
-            return redirect(url_for('index'))
+            return redirect(url_for('services.index', service_id=service_id))
 
     service = get_service(service_id)
     return render_template('boletos/register.html', service=service)
