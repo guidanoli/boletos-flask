@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}{{ service['name'] }}{% endblock %}</h1>
+<hr/>
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('boletos.register', service_id=service['id']) }}">Novo boleto</a><br/>
+<br/>
+<table>
+    <tr>
+        <th>Data de<br/>vencimento</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Ações</th>
+    </tr>
+    {% for boleto in boletos %}
+    <tr>
+        <td><div align="center">{{ fmtdate(boleto['expiry_ts']) }}</div></td>
+        <td><div align="center">{{ fmtamount(boleto['amount']) }}</div></td>
+        <td>
+            <div align="center">
+                {% if boleto['payment_ts'] %}
+                <div class="paid">Pago em {{ fmtdate(boleto['payment_ts']) }}</div>
+                {% elif boleto['expiry_ts'] < curr_ts %}
+                <div class="expired">Vencido</div>
+                {% else %}
+                <div class="notpaid">Não pago</div>
+                {% endif %}
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <a
+                    href="{{ url_for('boletos.view', filename=boleto['filename']) }}"
+                    title="Visualizar"
+                    style="text-decoration:none"
+                >
+                    🔍
+                </a>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

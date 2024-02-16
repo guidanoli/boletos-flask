@@ -1,11 +1,24 @@
+from datetime import datetime
+
 from flask import Blueprint, request, redirect, url_for, flash, render_template
 
-from boletos.db import get_db
+from boletos.db import get_db, get_service, get_boletos
 
 bp = Blueprint('services', __name__, url_prefix='/services')
 
-def get_service(service_id):
-    return get_db().execute('SELECT name FROM service s WHERE s.id = ?', (service_id,)).fetchone()
+
+@bp.route('/<int:service_id>')
+def index(service_id):
+    service = get_service(service_id)
+    boletos = get_boletos(service_id)
+    kwargs = {}
+    kwargs['service'] = service
+    kwargs['boletos'] = boletos
+    kwargs['fmtdate'] = (lambda ts: datetime.fromtimestamp(ts).strftime('%d/%m/%Y'))
+    kwargs['fmtamount'] = (lambda a: 'R$ {:.2f}'.format(a))
+    kwargs['curr_ts'] = datetime.now().timestamp()
+    return render_template('services/index.html', **kwargs)
+
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():

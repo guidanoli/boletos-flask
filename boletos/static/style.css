@@ -153,3 +153,7 @@ tr:nth-child(even) {
     border: 1px solid #377ba8;
 }
 
+.expired {
+    color: darkred;
+    font-weight: bold;
+}

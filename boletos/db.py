@@ -39,3 +39,11 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+
+def get_service(service_id):
+    return get_db().execute('SELECT * FROM service s WHERE s.id = ?', (service_id,)).fetchone()
+
+
+def get_boletos(service_id):
+    return get_db().execute('SELECT * FROM boleto b WHERE b.service_id = ? ORDER BY b.expiry_ts', (service_id,)).fetchall()

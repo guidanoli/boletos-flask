@@ -2,12 +2,11 @@ import os
 import uuid
 from datetime import datetime
 
-from flask import Blueprint, request, current_app, redirect, url_for, flash, render_template
+from flask import Blueprint, request, current_app, redirect, url_for, flash, render_template, send_from_directory
 
 from werkzeug.utils import secure_filename
 
-from boletos.db import get_db
-from boletos.service import get_service
+from boletos.db import get_db, get_service
 from boletos.errors import FlashMessage
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -99,3 +98,8 @@ def register(service_id):
 
     service = get_service(service_id)
     return render_template('boletos/register.html', service=service)
+
+
+@bp.route('/view/<filename>')
+def view(filename):
+    return send_from_directory(current_app.config['UPLOADS_DIR'], filename)
