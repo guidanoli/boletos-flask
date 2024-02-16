@@ -46,4 +46,4 @@ def get_service(service_id):
 
 
 def get_boletos(service_id):
-    return get_db().execute('SELECT * FROM boleto b WHERE b.service_id = ? ORDER BY b.expiry_ts', (service_id,)).fetchall()
+    return get_db().execute('SELECT * FROM boleto b WHERE b.service_id = ? ORDER BY b.expiry_ts DESC', (service_id,)).fetchall()
