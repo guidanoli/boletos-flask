@@ -7,6 +7,7 @@ from flask import Blueprint, request, current_app, redirect, url_for, flash, ren
 from werkzeug.utils import secure_filename
 
 from boletos.db import get_db
+from boletos.service import get_service
 from boletos.errors import FlashMessage
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -62,8 +63,9 @@ def check_ts(ts, datename):
         raise FlashMessage(f'A data de {datename} deve ser válida.')
 
 
-def register_boleto(db, service_id, filename, amount, issue_ts, expiry_ts):
+def register_boleto(service_id, filename, amount, issue_ts, expiry_ts):
     try:
+        db = get_db()
         db.execute(
             '''
             INSERT INTO boleto (service_id, filename, amount, issue_ts, expiry_ts)
@@ -76,29 +78,25 @@ def register_boleto(db, service_id, filename, amount, issue_ts, expiry_ts):
         raise FlashMessage('Erro ao registrar boleto no banco de dados.')
 
 
-def validate_form_and_register_boleto(service_id, db):
+def _register(service_id):
     file = check_file()
     filename, filepath = check_filename(file.filename)
     amount = check_amount(request.form['amount'])
     issue_ts = check_ts(request.form['issue_ts'], 'emissão')
     expiry_ts = check_ts(request.form['expiry_ts'], 'vencimento')
-    register_boleto(db, service_id, filename, amount, issue_ts, expiry_ts)
+    register_boleto(service_id, filename, amount, issue_ts, expiry_ts)
     file.save(filepath)
 
 
 @bp.route('/register/<int:service_id>', methods=('GET', 'POST'))
 def register(service_id):
-
-    db = get_db()
-
     if request.method == 'POST':
         try:
-            validate_form_and_register_boleto(service_id, db)
+            _register(service_id)
         except FlashMessage as e:
             flash(*e.args)
         else:
             return redirect(url_for('index'))
 
-    service = db.execute('SELECT name FROM service s WHERE s.id = ?', (service_id,)).fetchone()
-
+    service = get_service(service_id)
     return render_template('boletos/register.html', service=service)

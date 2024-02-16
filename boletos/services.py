@@ -4,6 +4,9 @@ from boletos.db import get_db
 
 bp = Blueprint('services', __name__, url_prefix='/services')
 
+def get_service(service_id):
+    return get_db().execute('SELECT name FROM service s WHERE s.id = ?', (service_id,)).fetchone()
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
