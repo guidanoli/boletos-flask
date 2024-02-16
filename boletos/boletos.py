@@ -63,15 +63,15 @@ def check_ts(ts, datename):
         raise FlashMessage(f'A data de {datename} deve ser válida.')
 
 
-def register_boleto(service_id, filename, amount, issue_ts, expiry_ts):
+def register_boleto(service_id, filename, amount, expiry_ts):
     try:
         db = get_db()
         db.execute(
             '''
-            INSERT INTO boleto (service_id, filename, amount, issue_ts, expiry_ts)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO boleto (service_id, filename, amount, expiry_ts)
+            VALUES (?, ?, ?, ?)
             ''',
-            (service_id, filename, amount, issue_ts, expiry_ts)
+            (service_id, filename, amount, expiry_ts)
         )
         db.commit()
     except db.IntegrityError:
@@ -82,9 +82,8 @@ def _register(service_id):
     file = check_file()
     filename, filepath = check_filename(file.filename)
     amount = check_amount(request.form['amount'])
-    issue_ts = check_ts(request.form['issue_ts'], 'emissão')
     expiry_ts = check_ts(request.form['expiry_ts'], 'vencimento')
-    register_boleto(service_id, filename, amount, issue_ts, expiry_ts)
+    register_boleto(service_id, filename, amount, expiry_ts)
     file.save(filepath)
 
 

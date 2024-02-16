@@ -11,7 +11,6 @@ CREATE TABLE boleto (
     service_id INTEGER NOT NULL REFERENCES service(id),
     filename VARCHAR NOT NULL,
     amount REAL NOT NULL,
-    issue_ts INTEGER NOT NULL,
     expiry_ts INTEGER NOT NULL,
     payment_ts INTEGER
 );

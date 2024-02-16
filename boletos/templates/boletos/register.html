@@ -7,9 +7,6 @@
 
 {% block content %}
 <form method="post" enctype="multipart/form-data">
-    <label for="issue_ts">Data de emissão:</label>
-    <input type="date" name="issue_ts" value="{{ request.form['issue_ts'] }}" required><br/>
-    <br/>
     <label for="expiry_ts">Data de vencimento:</label>
     <input type="date" name="expiry_ts" value="{{ request.form['expiry_ts'] }}" required><br/>
     <br/>

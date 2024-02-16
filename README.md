@@ -32,7 +32,6 @@ erDiagram
         INTEGER service_id FK "NOT NULL"
         VARCHAR filename "NOT NULL"
         REAL amount "NOT NULL"
-        INTEGER issue_ts "NOT NULL"
         INTEGER expiry_ts "NOT NULL"
         INTEGER payment_ts
     }
