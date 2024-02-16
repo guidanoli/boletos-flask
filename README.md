@@ -24,16 +24,16 @@ erDiagram
 
     SERVICE {
         INTEGER id PK
-        TEXT name
+        VARCHAR name "NOT NULL"
     }
     
     BOLETO {
         INTEGER id PK
-        INTEGER service_id FK
-        TEXT filename
-        INTEGER amount
-        INTEGER issue_ts
-        INTEGER expiry_ts
+        INTEGER service_id FK "NOT NULL"
+        VARCHAR filename "NOT NULL"
+        REAL amount "NOT NULL"
+        INTEGER issue_ts "NOT NULL"
+        INTEGER expiry_ts "NOT NULL"
         INTEGER payment_ts
     }
 
