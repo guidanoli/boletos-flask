@@ -28,12 +28,13 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    @app.route('/')
-    def home():
-        return render_template('home.html')
+    from . import home
+    app.register_blueprint(home.bp)
 
     from . import services
 
     app.register_blueprint(services.bp)
+
+    app.add_url_rule('/', endpoint='index')
 
     return app

@@ -24,7 +24,7 @@ def register():
             except db.IntegrityError:
                 error = 'Um serviço com esse nome já existe.'
             else:
-                return redirect(url_for('home'))
+                return redirect(url_for('index'))
 
         flash(error)
 
