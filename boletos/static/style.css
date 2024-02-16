@@ -157,3 +157,12 @@ tr:nth-child(even) {
     color: darkred;
     font-weight: bold;
 }
+
+.paid {
+    color: darkgreen;
+    font-weight: bold;
+}
+
+.notpaid {
+    font-weight: bold;
+}
