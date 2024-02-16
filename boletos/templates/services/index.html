@@ -33,12 +33,21 @@
         <td>
             <div align="center">
                 <a
-                    href="{{ url_for('boletos.view', filename=boleto['filename']) }}"
+                    href="{{ url_for('boletos.view', service_id=boleto['service_id'], boleto_id=boleto['id']) }}"
                     title="Visualizar"
                     style="text-decoration:none"
                 >
-                    🔍
+                🔍
                 </a>
+                {% if not boleto['payment_ts'] %}
+                <a
+                    href="{{ url_for('boletos.pay', service_id=boleto['service_id'], boleto_id=boleto['id']) }}"
+                    title="Marcar como pago"
+                    style="text-decoration:none"
+                >
+                ✅
+                </a>
+                {% endif %}
             </div>
         </td>
     </tr>

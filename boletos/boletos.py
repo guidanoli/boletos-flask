@@ -6,7 +6,7 @@ from flask import Blueprint, request, current_app, redirect, url_for, flash, ren
 
 from werkzeug.utils import secure_filename
 
-from boletos.db import get_db, get_service
+from boletos.db import get_db, get_service, get_boleto
 from boletos.errors import FlashMessage
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -100,6 +100,36 @@ def register(service_id):
     return render_template('boletos/register.html', service=service)
 
 
-@bp.route('/view/<filename>')
-def view(filename):
-    return send_from_directory(current_app.config['UPLOADS_DIR'], filename)
+@bp.route('/view/<int:service_id>/<int:boleto_id>')
+def view(service_id, boleto_id):
+    boleto = get_boleto(service_id, boleto_id)
+    return send_from_directory(current_app.config['UPLOADS_DIR'], boleto['filename'])
+
+@bp.route('/pay/<int:service_id>/<int:boleto_id>')
+def pay(service_id, boleto_id):
+    boleto = get_boleto(service_id, boleto_id)
+    error = None
+
+    if boleto['payment_ts']:
+        error = 'Este boleto já foi pago.'
+    else:
+        db = get_db()
+        payment_ts = datetime.now().timestamp()
+        try:
+            db.execute(
+                '''
+                UPDATE boleto
+                SET payment_ts = ?
+                WHERE service_id = ?
+                AND id = ?
+                ''',
+                (payment_ts, service_id, boleto_id)
+            )
+            db.commit()
+        except db.IntegrityError:
+            error = 'Erro ao atualizar boleto no banco de dados.'
+
+    if error:
+        flash(error)
+
+    return redirect(url_for('services.index', service_id=service_id))
