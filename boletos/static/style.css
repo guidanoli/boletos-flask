@@ -85,9 +85,14 @@ a {
     color: #081219;
 }
 
+nav a {
+    color: #fff;
+}
+
 hr {
     border: none;
     border-top: 1px solid lightgray;
+    margin-bottom: 1em;
 }
 
 nav {
@@ -119,9 +124,22 @@ nav ul li a, nav ul li span, header .action {
     padding: 0.5rem;
 }
 
+th, td {
+    padding: 0.5rem 1rem 0.5rem;
+}
+
 th {
     background: #377ba8;
-    padding: 0.5rem;
+    color: #fff;
+}
+
+table {
+    border-collapse: collapse;
+    border-bottom: 1px solid #b5e0fc;
+}
+
+tr:nth-child(even) {
+    background-color: #b5e0fc;
 }
 
 .content {
