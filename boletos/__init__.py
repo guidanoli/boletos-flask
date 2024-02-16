@@ -39,8 +39,10 @@ def create_app(test_config=None):
     app.register_blueprint(home.bp)
 
     from . import services
-
     app.register_blueprint(services.bp)
+
+    from . import boletos
+    app.register_blueprint(boletos.bp)
 
     app.add_url_rule('/', endpoint='index')
 

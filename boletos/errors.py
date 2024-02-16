@@ -1,0 +1,2 @@
+class FlashMessage(Exception):
+    pass

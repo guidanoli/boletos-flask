@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{{ service['name'] }} > {% block title %}Novo boleto{% endblock %}</h1>
+<hr/>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    <label for="issue_ts">Data de emissão:</label>
+    <input type="date" name="issue_ts" value="{{ request.form['issue_ts'] }}" required><br/>
+    <br/>
+    <label for="expiry_ts">Data de vencimento:</label>
+    <input type="date" name="expiry_ts" value="{{ request.form['expiry_ts'] }}" required><br/>
+    <br/>
+    <label for="amount">Valor:</label>
+    R$
+    <input type="number" placeholder="0.00" min="0.00" step="0.01" name="amount" value="{{ request.form['amount'] }}" required><br/>
+    <br/>
+    <label for="file">Arquivo:</label>
+    <input type="file" accept="application/pdf,image/*" name="file" required><br/>
+    <br/>
+    <input type="submit" value="Cadastrar">
+</form>
+{% endblock %}

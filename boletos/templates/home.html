@@ -6,7 +6,11 @@
 <table>
     <tr>
         <th>Serviço</th>
-        <th>Estado</th>
     </tr>
+    {% for service in services %}
+    <tr>
+        <td><a href="{{ url_for('boletos.register', service_id=service['id']) }}">{{ service['name'] }}</a></td>
+    </tr>
+    {% endfor %}
 </table>
 {% endblock %}
