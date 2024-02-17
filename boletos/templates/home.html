@@ -2,6 +2,11 @@
 
 {% block title %}Página Inicial{% endblock %}
 
+{% block header %}
+<h1>Serviços</h1>
+<hr/>
+{% endblock %}
+
 {% block content %}
 <a href="{{ url_for('services.register') }}">Novo serviço</a><br/>
 <br/>
