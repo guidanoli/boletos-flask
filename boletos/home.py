@@ -7,20 +7,27 @@ from boletos.db import get_services
 bp = Blueprint('home', __name__)
 
 
+def plural(n):
+    if n == 1:
+        return n, ''
+    else:
+        return n, 's'
+
+
 def fmtdelta(seconds):
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
     if days > 0:
-        return '{} dias'.format(days)
+        return '{} dia{}'.format(*plural(days))
     else:
         if hours > 0:
-            return '{} horas'.format(hours)
+            return '{} hora{}'.format(*plural(hours))
         else:
             if minutes > 0:
-                return '{} minutos'.format(minutes)
+                return '{} minuto{}'.format(*plural(minutes))
             else:
-                return '{} segundos'.format(seconds)
+                return '{} segundo{}'.format(*plural(seconds))
 
 @bp.route('/')
 def index():
