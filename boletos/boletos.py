@@ -86,7 +86,7 @@ def _register(service_id):
     file.save(filepath)
 
 
-@bp.route('/register/<int:service_id>', methods=('GET', 'POST'))
+@bp.route('/new/<int:service_id>', methods=('GET', 'POST'))
 def register(service_id):
     if request.method == 'POST':
         try:
@@ -100,14 +100,14 @@ def register(service_id):
     return render_template('boletos/register.html', service=service)
 
 
-@bp.route('/view/<int:service_id>/<int:boleto_id>')
-def view(service_id, boleto_id):
-    boleto = get_boleto(service_id, boleto_id)
+@bp.route('/<int:boleto_id>/view')
+def view(boleto_id):
+    boleto = get_boleto(boleto_id)
     return send_from_directory(current_app.config['UPLOADS_DIR'], boleto['filename'])
 
-@bp.route('/pay/<int:service_id>/<int:boleto_id>')
-def pay(service_id, boleto_id):
-    boleto = get_boleto(service_id, boleto_id)
+@bp.route('/<int:boleto_id>/pay')
+def pay(boleto_id):
+    boleto = get_boleto(boleto_id)
     error = None
 
     if boleto['payment_ts']:
@@ -120,10 +120,9 @@ def pay(service_id, boleto_id):
                 '''
                 UPDATE boleto
                 SET payment_ts = ?
-                WHERE service_id = ?
                 AND id = ?
                 ''',
-                (payment_ts, service_id, boleto_id)
+                (payment_ts, boleto_id)
             )
             db.commit()
         except db.IntegrityError:
@@ -132,4 +131,4 @@ def pay(service_id, boleto_id):
     if error:
         flash(error)
 
-    return redirect(url_for('services.index', service_id=service_id))
+    return redirect(url_for('boletos.index', service_id=boleto_id))
