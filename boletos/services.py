@@ -15,6 +15,7 @@ def index(service_id):
     kwargs['service'] = service
     kwargs['boletos'] = boletos
     kwargs['fmtdate'] = (lambda ts: datetime.fromtimestamp(ts).strftime('%d/%m/%Y'))
+    kwargs['fmttime'] = (lambda ts: datetime.fromtimestamp(ts).strftime('%Hh%M'))
     kwargs['fmtamount'] = (lambda a: 'R$ {:.2f}'.format(a))
     kwargs['curr_ts'] = datetime.now().timestamp()
     return render_template('services/index.html', **kwargs)

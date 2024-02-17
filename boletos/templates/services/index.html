@@ -22,7 +22,7 @@
         <td>
             <div align="center">
                 {% if boleto['payment_ts'] %}
-                <div class="paid">Pago em {{ fmtdate(boleto['payment_ts']) }}</div>
+                <div class="paid" title="Em {{ fmtdate(boleto['payment_ts']) }} às {{ fmttime(boleto['payment_ts']) }}">Pago</div>
                 {% elif boleto['expiry_ts'] < curr_ts %}
                 <div class="expired">Vencido</div>
                 {% else %}
