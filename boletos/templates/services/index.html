@@ -10,13 +10,14 @@
 <br/>
 <table>
     <tr>
+        <th>ID</th>
         <th>Data de<br/>vencimento</th>
         <th>Valor</th>
         <th>Status</th>
-        <th>Ações</th>
     </tr>
     {% for boleto in boletos %}
     <tr>
+        <td><div align="center">#{{ boleto['id'] }}</div></td>
         <td><div align="center">{{ fmtdate(boleto['expiry_ts']) }}</div></td>
         <td><div align="center">{{ fmtamount(boleto['amount']) }}</div></td>
         <td>
@@ -27,26 +28,6 @@
                 <div class="expired">Vencido</div>
                 {% else %}
                 <div class="notpaid">Não pago</div>
-                {% endif %}
-            </div>
-        </td>
-        <td>
-            <div align="center">
-                <a
-                    href="{{ url_for('boletos.view', service_id=boleto['service_id'], boleto_id=boleto['id']) }}"
-                    title="Visualizar"
-                    style="text-decoration:none"
-                >
-                🔍
-                </a>
-                {% if not boleto['payment_ts'] %}
-                <a
-                    href="{{ url_for('boletos.pay', service_id=boleto['service_id'], boleto_id=boleto['id']) }}"
-                    title="Marcar como pago"
-                    style="text-decoration:none"
-                >
-                ✅
-                </a>
                 {% endif %}
             </div>
         </td>
