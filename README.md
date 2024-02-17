@@ -13,6 +13,13 @@ This project aims to organize boletos and their payments.
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+flask --app boletos init-db
+```
+
+## Run server in debug mode
+
+```sh
+flask --app boletos run --debug
 ```
 
 ## Entity-relationship model
