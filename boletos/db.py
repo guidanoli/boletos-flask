@@ -45,12 +45,12 @@ def get_service(service_id):
     return get_db().execute('SELECT * FROM service s WHERE s.id = ?', (service_id,)).fetchone()
 
 
-def get_boletos(service_id):
+def get_boletos_from(service_id):
     return get_db().execute('SELECT * FROM boleto b WHERE b.service_id = ? ORDER BY b.expiry_ts DESC', (service_id,)).fetchall()
 
 
-def get_boleto(service_id, boleto_id):
-    return get_db().execute('SELECT * FROM boleto b WHERE b.service_id = ? AND b.id = ?', (service_id, boleto_id)).fetchone()
+def get_boleto(boleto_id):
+    return get_db().execute('SELECT * FROM boleto WHERE AND id = ?', (boleto_id,)).fetchone()
 
 
 def get_services():

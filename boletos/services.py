@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import Blueprint, request, redirect, url_for, flash, render_template
 
-from boletos.db import get_db, get_service, get_boletos
+from boletos.db import get_db, get_service, get_boletos_from
 
 bp = Blueprint('services', __name__, url_prefix='/services')
 
@@ -10,7 +10,7 @@ bp = Blueprint('services', __name__, url_prefix='/services')
 @bp.route('/<int:service_id>')
 def index(service_id):
     service = get_service(service_id)
-    boletos = get_boletos(service_id)
+    boletos = get_boletos_from(service_id)
     kwargs = {}
     kwargs['service'] = service
     kwargs['boletos'] = boletos
