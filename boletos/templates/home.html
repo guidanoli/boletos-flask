@@ -8,10 +8,18 @@
 <table>
     <tr>
         <th>Serviço</th>
+        <th>Último boleto pago</th>
     </tr>
     {% for service in services %}
     <tr>
         <td><a href="{{ url_for('services.index', service_id=service['id']) }}">{{ service['name'] }}</a></td>
+        <td>
+            {% if service['last_payment_ts'] %}
+            Há {{ fmtdelta(curr_ts - service['last_payment_ts']) }}
+            {% else %}
+            Nenhum
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>

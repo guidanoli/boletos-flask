@@ -51,3 +51,15 @@ def get_boletos(service_id):
 
 def get_boleto(service_id, boleto_id):
     return get_db().execute('SELECT * FROM boleto b WHERE b.service_id = ? AND b.id = ?', (service_id, boleto_id)).fetchone()
+
+
+def get_services():
+    return get_db().execute('''
+        SELECT id, name, last_payment_ts
+        FROM service
+        LEFT OUTER JOIN (SELECT service_id, MAX(payment_ts) as last_payment_ts
+                         FROM boleto
+                         GROUP BY service_id)
+        ON id = service_id
+        ORDER BY last_payment_ts
+ ''').fetchall()
