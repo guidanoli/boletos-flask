@@ -1,4 +1,5 @@
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 def fmtdate(ts):
@@ -32,3 +33,18 @@ def fmtamount(a):
 def get_extension(filename):
     if '.' in filename:
         return filename.rsplit('.', 1)[1].lower()
+
+
+def get_delta(frequency):
+    if frequency == 'monthly':
+        return relativedelta(months=1)
+    elif frequency == 'yearly':
+        return relativedelta(years=1)
+    else:
+        raise ValueError('unknown frequency')
+
+
+def next_expiry_ts_estimation(max_paid_expiry_ts, frequency):
+    date = datetime.fromtimestamp(max_paid_expiry_ts)
+    delta = get_delta(frequency)
+    return (date + delta).timestamp()

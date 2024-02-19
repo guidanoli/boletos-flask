@@ -41,7 +41,18 @@ def init_app(app):
 
 
 def get_services():
-    return get_db().execute('SELECT * FROM service').fetchall()
+    return get_db().execute(
+            '''
+            SELECT *
+            FROM service
+            LEFT JOIN (SELECT service_id, MAX(expiry_ts) AS max_paid_expiry_ts
+                       FROM boleto
+                       WHERE paid = 1
+                       GROUP BY service_id
+                       ORDER BY expiry_ts DESC) ON service.id = service_id
+            ORDER BY max_paid_expiry_ts ASC
+            '''
+    ).fetchall()
 
 
 def get_service(service_id):

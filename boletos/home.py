@@ -3,15 +3,10 @@ from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, flash, render_template
 
 from boletos.db import get_services
+import boletos.utils as u
 
 bp = Blueprint('home', __name__)
 
-
-def plural(n):
-    if n == 1:
-        return n, ''
-    else:
-        return n, 's'
 
 @bp.route('/')
 def index():
@@ -19,4 +14,5 @@ def index():
 
     kwargs = {}
     kwargs['services'] = services
+    kwargs['u'] = u
     return render_template('home.html', **kwargs)
