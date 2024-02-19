@@ -3,7 +3,8 @@ DROP TABLE IF EXISTS boleto;
 
 CREATE TABLE service (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR UNIQUE NOT NULL
+    name VARCHAR UNIQUE NOT NULL,
+    frequency VARCHAR NOT NULL
 );
 
 CREATE TABLE boleto (
@@ -12,5 +13,5 @@ CREATE TABLE boleto (
     filename VARCHAR NOT NULL,
     amount REAL NOT NULL,
     expiry_ts INTEGER NOT NULL,
-    payment_ts INTEGER
+    paid INTEGER NOT NULL
 );

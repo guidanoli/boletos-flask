@@ -24,9 +24,8 @@ def close_db(e=None):
 
 def init_db():
     db = get_db()
-    for filepath in ('schema.sql', 'views.sql'):
-        with current_app.open_resource(filepath) as f:
-            db.executescript(f.read().decode('utf8'))
+    with current_app.open_resource('schema.sql') as f:
+        db.executescript(f.read().decode('utf8'))
 
 
 @click.command('init-db')
@@ -41,17 +40,17 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 
+def get_services():
+    return get_db().execute('SELECT * FROM service').fetchall()
+
+
 def get_service(service_id):
-    return get_db().execute('SELECT * FROM service s WHERE s.id = ?', (service_id,)).fetchone()
-
-
-def get_boletos_from(service_id):
-    return get_db().execute('SELECT * FROM boleto b WHERE b.service_id = ? ORDER BY b.expiry_ts DESC', (service_id,)).fetchall()
+    return get_db().execute('SELECT * FROM service WHERE id = ?', (service_id,)).fetchone()
 
 
 def get_boleto(boleto_id):
     return get_db().execute('SELECT * FROM boleto WHERE id = ?', (boleto_id,)).fetchone()
 
 
-def get_services():
-    return get_db().execute('SELECT * FROM services_statistics').fetchall()
+def get_boletos_from(service_id):
+    return get_db().execute('SELECT * FROM boleto b WHERE b.service_id = ? ORDER BY b.expiry_ts DESC', (service_id,)).fetchall()

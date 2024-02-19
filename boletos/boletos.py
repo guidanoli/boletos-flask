@@ -2,21 +2,36 @@ import os
 import uuid
 from datetime import datetime
 
-from flask import Blueprint, request, current_app, redirect, url_for, flash, render_template, send_from_directory
+from flask import abort, Blueprint, request, current_app, redirect, url_for, flash, render_template, send_from_directory
 
 from werkzeug.utils import secure_filename
 
 from boletos.db import get_db, get_service, get_boleto
 from boletos.errors import FlashMessage
+import boletos.utils as u
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 bp = Blueprint('boletos', __name__, url_prefix='/boletos')
 
 
-def get_extension(filename):
-    if '.' in filename:
-        return filename.rsplit('.', 1)[1].lower()
+@bp.route('/<int:boleto_id>')
+def index(boleto_id):
+    boleto = get_boleto(boleto_id)
+
+    if not boleto:
+        abort(404)
+
+    service = get_service(boleto['service_id'])
+
+    if not service:
+        abort(404)
+
+    kwargs = {}
+    kwargs['boleto'] = boleto
+    kwargs['service'] = service
+    kwargs['u'] = u
+    return render_template('boletos/index.html', **kwargs)
 
 
 def check_file():
@@ -29,7 +44,7 @@ def check_filename(filename):
     if not filename:
         raise FlashMessage('O arquivo do boleto é obrigatório.')
     else:
-        ext = get_extension(filename)
+        ext = u.get_extension(filename)
         if ext not in ALLOWED_EXTENSIONS:
             raise FlashMessage('O arquivo do boleto deve ser um PDF ou uma imagem.')
         else:
@@ -62,15 +77,15 @@ def check_ts(ts, datename):
         raise FlashMessage(f'A data de {datename} deve ser válida.')
 
 
-def register_boleto(service_id, filename, amount, expiry_ts):
+def register_boleto(service_id, filename, amount, expiry_ts, paid):
     try:
         db = get_db()
         db.execute(
             '''
-            INSERT INTO boleto (service_id, filename, amount, expiry_ts)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO boleto (service_id, filename, amount, expiry_ts, paid)
+            VALUES (?, ?, ?, ?, ?)
             ''',
-            (service_id, filename, amount, expiry_ts)
+            (service_id, filename, amount, expiry_ts, paid)
         )
         db.commit()
     except db.IntegrityError:
@@ -82,12 +97,19 @@ def _register(service_id):
     filename, filepath = check_filename(file.filename)
     amount = check_amount(request.form['amount'])
     expiry_ts = check_ts(request.form['expiry_ts'], 'vencimento')
-    register_boleto(service_id, filename, amount, expiry_ts)
+    paid = request.form.get('paid') is not None
+    register_boleto(service_id, filename, amount, expiry_ts, paid)
     file.save(filepath)
 
 
 @bp.route('/new/<int:service_id>', methods=('GET', 'POST'))
 def register(service_id):
+
+    service = get_service(service_id)
+
+    if not service:
+        abort(404)
+
     if request.method == 'POST':
         try:
             _register(service_id)
@@ -96,33 +118,39 @@ def register(service_id):
         else:
             return redirect(url_for('services.index', service_id=service_id))
 
-    service = get_service(service_id)
     return render_template('boletos/register.html', service=service)
 
 
 @bp.route('/<int:boleto_id>/view')
 def view(boleto_id):
     boleto = get_boleto(boleto_id)
+
+    if not boleto:
+        abort(404)
+
     return send_from_directory(current_app.config['UPLOADS_DIR'], boleto['filename'])
 
-@bp.route('/<int:boleto_id>/pay')
-def pay(boleto_id):
+
+def set_paid(boleto_id, paid, idempotent_error):
     boleto = get_boleto(boleto_id)
+
+    if not boleto:
+        abort(404)
+
     error = None
 
-    if boleto['payment_ts']:
-        error = 'Este boleto já foi pago.'
+    if boleto['paid'] == paid:
+        error = idempotent_error
     else:
         db = get_db()
-        payment_ts = datetime.now().timestamp()
         try:
             db.execute(
                 '''
                 UPDATE boleto
-                SET payment_ts = ?
+                SET paid = ?
                 WHERE id = ?
                 ''',
-                (payment_ts, boleto_id)
+                (paid, boleto_id)
             )
             db.commit()
         except db.IntegrityError:
@@ -131,4 +159,43 @@ def pay(boleto_id):
     if error:
         flash(error)
 
-    return redirect(url_for('boletos.index', service_id=boleto_id))
+    return redirect(url_for('services.index', service_id=boleto['service_id']))
+
+
+@bp.route('/<int:boleto_id>/pay')
+def pay(boleto_id):
+    return set_paid(boleto_id, 1, 'Este boleto já foi pago.')
+
+
+@bp.route('/<int:boleto_id>/unpay')
+def unpay(boleto_id):
+    return set_paid(boleto_id, 0, 'Este boleto não foi pago ainda.')
+
+
+@bp.route('/<int:boleto_id>/delete')
+def delete(boleto_id):
+    boleto = get_boleto(boleto_id)
+
+    if not boleto:
+        abort(404)
+
+    error = None
+
+    db = get_db()
+    try:
+        db.execute(
+            '''
+            DELETE FROM boleto
+            WHERE id = ?
+            ''',
+            (boleto_id,)
+        )
+        db.commit()
+        os.remove(os.path.join(current_app.config['UPLOADS_DIR'], boleto['filename']))
+    except db.IntegrityError:
+        error = 'Erro ao remover boleto do banco de dados.'
+
+    if error:
+        flash(error)
+
+    return redirect(url_for('services.index', service_id=boleto['service_id']))

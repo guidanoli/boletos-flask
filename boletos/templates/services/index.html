@@ -10,25 +10,39 @@
 <br/>
 <table>
     <tr>
-        <th>ID</th>
+        <th>Arquivo</th>
         <th>Data de<br/>vencimento</th>
         <th>Valor</th>
         <th>Status</th>
+        <th>Editar</th>
     </tr>
     {% for boleto in boletos %}
     <tr>
-        <td><div align="center">#{{ boleto['id'] }}</div></td>
-        <td><div align="center">{{ fmtdate(boleto['expiry_ts']) }}</div></td>
-        <td><div align="center">{{ fmtamount(boleto['amount']) }}</div></td>
         <td>
             <div align="center">
-                {% if boleto['payment_ts'] %}
-                <div class="paid" title="Em {{ fmtdate(boleto['payment_ts']) }} às {{ fmttime(boleto['payment_ts']) }}">Pago</div>
+                <a href="{{ url_for('boletos.view', boleto_id=boleto['id']) }}">
+                    [{{ u.get_extension(boleto['filename']) }}]
+                </a>
+            </div>
+        </td>
+        <td><div align="center">{{ u.fmtdate(boleto['expiry_ts']) }}</div></td>
+        <td><div align="center">{{ u.fmtamount(boleto['amount']) }}</div></td>
+        <td>
+            <div align="center">
+                {% if boleto['paid'] %}
+                <div class="paid">Pago</div>
                 {% elif boleto['expiry_ts'] < curr_ts %}
                 <div class="expired">Vencido</div>
                 {% else %}
                 <div class="notpaid">Em aberto</div>
                 {% endif %}
+            </div>
+        </td>
+        <td>
+            <div align="center">
+                <a href="{{ url_for('boletos.index', boleto_id=boleto['id']) }}" class="nodecoration">
+                    ✏️
+                </a>
             </div>
         </td>
     </tr>

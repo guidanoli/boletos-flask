@@ -166,3 +166,7 @@ tr:nth-child(even) {
 .notpaid {
     font-weight: bold;
 }
+
+.nodecoration {
+    text-decoration: none;
+}

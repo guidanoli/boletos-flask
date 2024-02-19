@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>{% block title %}{% endblock %} - Boletos</title>
+        <title>{% block fulltitle %}{% block title %}{% endblock %} - Boletos{% endblock %}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     </head>

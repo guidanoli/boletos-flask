@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Página Inicial{% endblock %}
+{% block fulltitle %}Boletos{% endblock %}
 
 {% block header %}
 <h1>Serviços</h1>
@@ -13,26 +13,10 @@
 <table>
     <tr>
         <th>Serviço</th>
-        <th>Próximo boleto a pagar</th>
-        <th>Último boleto pago</th>
     </tr>
     {% for service in services %}
     <tr>
         <td><a href="{{ url_for('services.index', service_id=service['id']) }}">{{ service['name'] }}</a></td>
-        <td>
-            {% if service['first_expiry_ts'] %}
-            Vence daqui a {{ fmtdelta(service['first_expiry_ts'] - curr_ts) }}
-            {% else %}
-            Nenhum
-            {% endif %}
-        </td>
-        <td>
-            {% if service['last_payment_ts'] %}
-            Há {{ fmtdelta(curr_ts - service['last_payment_ts']) }}
-            {% else %}
-            Nenhum
-            {% endif %}
-        </td>
     </tr>
     {% endfor %}
 </table>
