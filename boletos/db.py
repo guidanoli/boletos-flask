@@ -50,7 +50,7 @@ def get_boletos_from(service_id):
 
 
 def get_boleto(boleto_id):
-    return get_db().execute('SELECT * FROM boleto WHERE AND id = ?', (boleto_id,)).fetchone()
+    return get_db().execute('SELECT * FROM boleto WHERE id = ?', (boleto_id,)).fetchone()
 
 
 def get_services():

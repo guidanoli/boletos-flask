@@ -120,7 +120,7 @@ def pay(boleto_id):
                 '''
                 UPDATE boleto
                 SET payment_ts = ?
-                AND id = ?
+                WHERE id = ?
                 ''',
                 (payment_ts, boleto_id)
             )
