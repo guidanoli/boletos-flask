@@ -8,7 +8,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'boletos.sqlite'),
+        DATABASE=os.path.join(app.instance_path, 'db.sqlite'),
         UPLOADS_DIR=os.path.join(app.instance_path, 'uploads'),
         MAX_CONTENT_LENGTH=2**24, # 16 MB
     )
@@ -38,8 +38,11 @@ def create_app(test_config=None):
     from . import home
     app.register_blueprint(home.bp)
 
-    from . import services
-    app.register_blueprint(services.bp)
+    from . import service
+    app.register_blueprint(service.bp)
+
+    from . import payment
+    app.register_blueprint(payment.bp)
 
     app.add_url_rule('/', endpoint='index')
 
