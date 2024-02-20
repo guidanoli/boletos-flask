@@ -1,8 +1,8 @@
 import flask
 
-bp = flask.Blueprint('payment', __name__, url_prefix='/payment')
+bp = flask.Blueprint('payment', __name__)
 
 
-@bp.route('/new')
+@bp.route('/<int:service_id>/payment/new')
 def new():
-    return flask.render_template('payment/new.html')
+    return flask.render_template('service/payment/new.html')
