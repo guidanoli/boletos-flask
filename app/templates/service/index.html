@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block header %}{% block title %}{{ service['name'] }}{% endblock %}{% endblock %}
+{% block header %}{% block title %}{{ service.name }}{% endblock %}{% endblock %}
 
 {% block body %}
-<a href="{{ url_for('service.payment.new', service_id=service['service_id']) }}">New payment</a>
+<a href="{{ url_for('service.payment.new', service_id=service.service_id) }}">New payment</a>
 <ul>
     {% for payment in payments %}
-    <li><a href="{{ url_for('service.payment.view', service_id=payment['service_id'], year=payment['year'], month=payment['month']) }}">{{ month_name[payment['month']] }}/{{ payment['year'] }}</a></li>
+    <li><a href="{{ url_for('service.payment.view', service_id=payment.service_id, year=payment.year, month=payment.month) }}">{{ month_name[payment.month] }}/{{ payment.year }}</a></li>
     {% endfor %}
 </ul>
 {% endblock %}
