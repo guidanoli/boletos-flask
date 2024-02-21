@@ -1,5 +1,5 @@
 import flask
-from flask import Blueprint, request, render_template, redirect, flash, url_for
+from flask import Blueprint, request, render_template, redirect, flash, url_for, abort
 
 from . import payment
 from boletos.db import get_db
@@ -37,4 +37,19 @@ def new():
 
 @bp.route('/<int:service_id>')
 def index(service_id):
-    return render_template('service/index.html')
+    db = get_db()
+    service = db.execute(
+        '''
+        SELECT *
+        FROM service
+        WHERE service_id = ?
+        ''',
+        (service_id, )
+    ).fetchone()
+
+    if not service:
+        abort(404)
+
+    kwargs = {}
+    kwargs['service'] = service
+    return render_template('service/index.html', **kwargs)
