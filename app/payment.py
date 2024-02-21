@@ -3,9 +3,9 @@ import uuid
 from datetime import datetime
 import calendar
 
-from flask import Blueprint, render_template, request, redirect, url_for, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, current_app, send_from_directory
 
-from app.db import get_db, get_service
+from app.db import get_db, get_service, get_payment
 
 bp = Blueprint('payment', __name__)
 
@@ -61,3 +61,10 @@ def new(service_id):
     kwargs['months'] = enumerate(calendar.month_name[1:], start=1)
     kwargs['now'] = datetime.now()
     return render_template('service/payment/new.html', **kwargs)
+
+
+@bp.route('/<int:service_id>/payment/<int:payment_id>/view')
+def view(service_id, payment_id):
+    payment = get_payment(payment_id)
+    assert payment['service_id'] == service_id
+    return send_from_directory(current_app.config['UPLOADS_DIR'], payment['filename'])

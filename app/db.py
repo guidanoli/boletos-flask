@@ -69,3 +69,20 @@ def get_payments_for(service_id):
     ).fetchall()
 
     return payments
+
+
+def get_payment(payment_id):
+    db = get_db()
+    payment = db.execute(
+        '''
+        SELECT *
+        FROM payment
+        WHERE payment_id = ?
+        ''',
+        (payment_id, )
+    ).fetchone()
+
+    if payment is None:
+        abort(404)
+
+    return payment
