@@ -55,3 +55,17 @@ def get_service(service_id):
         abort(404)
 
     return service
+
+
+def get_payments_for(service_id):
+    db = get_db()
+    payments = db.execute(
+        '''
+        SELECT *
+        FROM payment
+        WHERE service_id = ?
+        ''',
+        (service_id, )
+    ).fetchall()
+
+    return payments
