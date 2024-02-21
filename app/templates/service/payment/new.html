@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block header %}{% block title %}New payment{% endblock %}{% endblock %}
+{% block header %}{% block title %}{{ service['name'] }} / New payment{% endblock %}{% endblock %}
 
 {% block body %}
 <form method="post">
