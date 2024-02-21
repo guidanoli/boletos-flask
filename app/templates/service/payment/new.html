@@ -3,12 +3,22 @@
 {% block header %}{% block title %}{{ service['name'] }} / New payment{% endblock %}{% endblock %}
 
 {% block body %}
-<form method="post">
-    <label for="year">Year:</label>
-    <input type="number" name="year" step="1" required /><br/>
-    <br/>
-    <label for="month">Month:</label>
-    <input type="number" name="month" step="1" min="1" max="12" required /><br/>
+<form method="post" enctype="multipart/form-data">
+    Date:
+    <select name="month">
+        {% for value, month in months %}
+        <option
+            value="{{ value }}"
+            {% if value == now.month %}
+            selected
+            {% endif %}
+        >
+            {{ month }}
+        </option>
+        {% endfor %}
+    </select>
+    /
+    <input type="number" name="year" size="8" value="{{ now.year }}"><br/>
     <br/>
     <label for="file">File:</label>
     <input type="file" name="file" accept="application/pdf,image/*" required /><br/>
