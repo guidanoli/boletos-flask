@@ -7,9 +7,9 @@ CREATE TABLE service (
 );
 
 CREATE TABLE payment (
-    payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
     service_id INTEGER NOT NULL REFERENCES service(service_id),
-    filename VARCHAR NOT NULL,
     year INTEGER NOT NULL,
-    month INTEGER NOT NULL
+    month INTEGER NOT NULL,
+    filename VARCHAR NOT NULL,
+    PRIMARY KEY (service_id, year, month)
 )

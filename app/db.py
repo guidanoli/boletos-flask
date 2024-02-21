@@ -71,15 +71,17 @@ def get_payments_for(service_id):
     return payments
 
 
-def get_payment(payment_id):
+def get_payment(service_id, year, month):
     db = get_db()
     payment = db.execute(
         '''
         SELECT *
         FROM payment
-        WHERE payment_id = ?
+        WHERE service_id = ?
+        AND year = ?
+        AND month = ?
         ''',
-        (payment_id, )
+        (service_id, year, month)
     ).fetchone()
 
     if payment is None:

@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 import calendar
 
-from flask import Blueprint, render_template, request, redirect, url_for, current_app, send_from_directory
+from flask import Blueprint, render_template, request, redirect, url_for, current_app, send_from_directory, flash
 
 from app.db import get_db, get_service, get_payment
 
@@ -37,22 +37,27 @@ def new(service_id):
         month = int(request.form['month'])
 
         ext = get_extension(file.filename)
-        assert ext in ALLOWED_EXTENSIONS
-
-        filename, filepath = generate_filename(ext)
-        file.save(filepath)
+        if ext in ALLOWED_EXTENSIONS:
+            filename, filepath = generate_filename(ext)
+            file.save(filepath)
+        else:
+            error = 'Invalid file extension.'
 
         if error is None:
             db = get_db()
-            db.execute(
-                '''
-                INSERT INTO payment (service_id, filename, year, month)
-                VALUES (?, ?, ?, ?)
-                ''',
-                (service_id, filename, year, month)
-            )
-            db.commit()
-            return redirect(url_for('service.index', service_id=service_id))
+            try:
+                db.execute(
+                    '''
+                    INSERT INTO payment (service_id, year, month, filename)
+                    VALUES (?, ?, ?, ?)
+                    ''',
+                    (service_id, year, month, filename)
+                )
+                db.commit()
+            except db.IntegrityError:
+                error = 'A payment for this service and date already exist.'
+            else:
+                return redirect(url_for('service.index', service_id=service_id))
 
         flash(error)
 
@@ -63,8 +68,7 @@ def new(service_id):
     return render_template('service/payment/new.html', **kwargs)
 
 
-@bp.route('/<int:service_id>/payment/<int:payment_id>/view')
-def view(service_id, payment_id):
-    payment = get_payment(payment_id)
-    assert payment['service_id'] == service_id
+@bp.route('/<int:service_id>/payment/<int:year>/<int:month>/view')
+def view(service_id, year, month):
+    payment = get_payment(service_id, year, month)
     return send_from_directory(current_app.config['UPLOADS_DIR'], payment['filename'])
