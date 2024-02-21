@@ -4,4 +4,9 @@
 
 {% block body %}
 <a href="{{ url_for('service.payment.new', service_id=service['service_id']) }}">New payment</a>
+<ul>
+    {% for payment in payments %}
+    <li>{{ month_name[payment['month']] }}/{{ payment['year'] }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}
