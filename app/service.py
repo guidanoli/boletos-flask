@@ -33,3 +33,8 @@ def new():
         flash(error)
 
     return render_template('service/new.html')
+
+
+@bp.route('/<int:service_id>')
+def index(service_id):
+    return render_template('service/index.html')
