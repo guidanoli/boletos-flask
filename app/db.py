@@ -64,6 +64,7 @@ def get_payments_for(service_id):
         SELECT *
         FROM payment
         WHERE service_id = ?
+        ORDER BY year DESC, month DESC
         ''',
         (service_id, )
     ).fetchall()
