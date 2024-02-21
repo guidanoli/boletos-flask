@@ -1,7 +1,7 @@
 import sqlite3
 
 import click
-from flask import current_app, g
+from flask import current_app, g, abort
 
 
 def get_db():
@@ -38,3 +38,20 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+
+def get_service(service_id):
+    db = get_db()
+    service = db.execute(
+        '''
+        SELECT *
+        FROM service
+        WHERE service_id = ?
+        ''',
+        (service_id, )
+    ).fetchone()
+
+    if service is None:
+        abort(404)
+
+    return service
