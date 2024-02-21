@@ -72,3 +72,38 @@ def new(service_id):
 def view(service_id, year, month):
     payment = get_payment(service_id, year, month)
     return send_from_directory(current_app.config['UPLOADS_DIR'], payment['filename'])
+
+
+@bp.route('/<int:service_id>/payment/<int:year>/<int:month>/delete', methods=('GET', 'POST'))
+def delete(service_id, year, month):
+    print(request.form)
+    service = get_service(service_id)
+    payment = get_payment(service_id, year, month)
+
+    if request.method == 'POST':
+        error = None
+
+        db = get_db()
+        try:
+            db.execute(
+                '''
+                DELETE FROM payment
+                WHERE service_id = ?
+                AND year = ?
+                AND month = ?
+                ''',
+                (service_id, year, month)
+            )
+            db.commit()
+        except db.IntegrityError:
+            error = 'The server was unable to delete the payment from the database.'
+        else:
+            return redirect(url_for('service.index', service_id=service_id))
+
+        flash(error)
+
+    kwargs = {}
+    kwargs['service'] = service
+    kwargs['payment'] = payment
+    kwargs['month_name'] = calendar.month_name
+    return render_template('service/payment/delete.html', **kwargs)

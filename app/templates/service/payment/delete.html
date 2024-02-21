@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header %}{% block title %}{{ service.name }} / Delete payment{% endblock %}{% endblock %}
+
+{% block body %}
+Are you sure you want to delete the payment from
+<a href="{{ url_for('service.payment.view', service_id=payment.service_id, year=payment.year, month=payment.month) }}">{{ month_name[payment.month] }}/{{ payment.year }}</a>?<br/>
+<br/>
+<form>
+    <input type="submit" value="Yes" formmethod="post">
+    <input type="submit" value="Cancel" formaction="{{ url_for('service.index', service_id=payment.service_id) }}">
+</form>
+{% endblock %}
