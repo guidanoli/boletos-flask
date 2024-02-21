@@ -3,10 +3,20 @@
 {% block header %}{% block title %}{{ service.name }}{% endblock %}{% endblock %}
 
 {% block body %}
-<a href="{{ url_for('service.payment.new', service_id=service.service_id) }}">New payment</a>
-<ul>
+<a href="{{ url_for('service.payment.new', service_id=service.service_id) }}">New payment</a><br/>
+<br/>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>View</th>
+        <th>Delete</th>
+    </tr>
     {% for payment in payments %}
-    <li><a href="{{ url_for('service.payment.view', service_id=payment.service_id, year=payment.year, month=payment.month) }}">{{ month_name[payment.month] }}/{{ payment.year }}</a></li>
+    <tr>
+        <td>{{ month_name[payment.month] }}/{{ payment.year }}</td>
+        <td><a href="{{ url_for('service.payment.view', service_id=payment.service_id, year=payment.year, month=payment.month) }}">🔍</a></td>
+        <td><a href="{{ url_for('service.payment.delete', service_id=payment.service_id, year=payment.year, month=payment.month) }}">🗑️</a></td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 {% endblock %}
