@@ -21,7 +21,10 @@ def new():
         if error is None:
             try:
                 db.execute(
-                    'INSERT INTO service (name) VALUES (?)',
+                    '''
+                    INSERT INTO service (name)
+                    VALUES (?)
+                    ''',
                     (name, )
                 )
                 db.commit()
