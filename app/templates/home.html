@@ -5,7 +5,7 @@
 {% block body %}
 <ul>
     {% for service in services %}
-    <li>{{ service['name'] }}</li>
+    <li><a href="{{ url_for('service.index', service_id=service['service_id']) }}">{{ service['name'] }}</a></li>
     {% endfor %}
 <ul>
 {% endblock %}
