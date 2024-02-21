@@ -1,8 +1,8 @@
-import flask
+from flask import Blueprint, render_template
 
-bp = flask.Blueprint('payment', __name__)
+bp = Blueprint('payment', __name__)
 
 
 @bp.route('/<int:service_id>/payment/new')
 def new():
-    return flask.render_template('service/payment/new.html')
+    return render_template('service/payment/new.html')

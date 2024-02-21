@@ -1,4 +1,3 @@
-import flask
 from flask import Blueprint, request, render_template, redirect, flash, url_for, abort
 
 from . import payment
