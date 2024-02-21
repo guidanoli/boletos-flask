@@ -3,5 +3,5 @@
 {% block header %}{% block title %}{{ service['name'] }}{% endblock %}{% endblock %}
 
 {% block body %}
-Nothing here.
+<a href="{{ url_for('service.payment.new', service_id=service['service_id']) }}">New payment</a>
 {% endblock %}
