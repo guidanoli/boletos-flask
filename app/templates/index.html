@@ -5,9 +5,10 @@
 {% block header %}{% block title %}Home{% endblock %}{% endblock %}
 
 {% block body %}
+<h2>Services</h2>
+<a href="{{ url_for('service.new') }}">New service</a>
 <ul>
-    <li><a href="{{ url_for('service.new') }}">New service</a><br/></li>
-    <li><a href="{{ url_for('index.due') }}">Due payments</a><br/></li>
-    <li><a href="{{ url_for('index.uptodate') }}">Up-to-date payments</a><br/></li>
+    <li><a href="{{ url_for('index.due') }}">... with due payments</a><br/></li>
+    <li><a href="{{ url_for('index.uptodate') }}">... with up-to-date payments</a><br/></li>
 </ul>
 {% endblock %}
