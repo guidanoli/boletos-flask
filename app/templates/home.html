@@ -11,11 +11,13 @@
     <tr>
         <th>Service</th>
         <th>View</th>
+        <th>Delete</th>
     </tr>
     {% for service in services %}
     <tr>
         <td>{{ service.name }}</td>
         <td><a href="{{ url_for('service.index', service_id=service.service_id) }}" style="text-decoration: none">🔍</a></td>
+        <td><a href="{{ url_for('service.delete', service_id=service.service_id) }}" style="text-decoration: none">🗑️</a></td>
     </tr>
     {% endfor %}
 </table>
