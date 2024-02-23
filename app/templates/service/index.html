@@ -3,8 +3,9 @@
 {% block header %}{% block title %}{{ service.name }}{% endblock %}{% endblock %}
 
 {% block body %}
-<a href="{{ url_for('service.payment.new', service_id=service.service_id) }}">New payment</a><br/>
+<a href="{{ url_for('service.delete', service_id=service.service_id) }}">Delete service</a><br/>
 <h2>Payments</h2>
+<a href="{{ url_for('service.payment.new', service_id=service.service_id) }}">New payment</a><br/>
 <ul>
     {% for payment in payments %}
     <li>
