@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <a href="{{ url_for('service.index', service_id=payment.service_id) }}">
+        {{ service.name }}
+    </a>
+    ::
+    {% block title %}
+        {{ month_name[payment.month] }}/{{ payment.year }}
+    {% endblock %}
+{% endblock %}
+
+{% block body %}
+<ul>
+    <li><a href="{{ url_for('service.payment.view', service_id=payment.service_id, year=payment.year, month=payment.month) }}">View</a></li>
+    <li><a href="{{ url_for('service.payment.delete', service_id=payment.service_id, year=payment.year, month=payment.month) }}">Delete</a></li>
+</ul>
+{% endblock %}

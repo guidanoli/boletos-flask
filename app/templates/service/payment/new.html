@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
-{% block header %}{% block title %}{{ service.name }} / New payment{% endblock %}{% endblock %}
+{% block header %}
+    <a href="{{ url_for('service.index', service_id=service.service_id) }}">
+        {{ service.name }}
+    </a>
+    ::
+    {% block title %}
+        New payment
+    {% endblock %}
+{% endblock %}
 
 {% block body %}
 <form method="post" enctype="multipart/form-data">

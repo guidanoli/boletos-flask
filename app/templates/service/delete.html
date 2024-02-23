@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
-{% block header %}{% block title %}{{ service.name }} / Delete service{% endblock %}{% endblock %}
+{% block header %}
+    <a href="{{ url_for('service.index', service_id=payment.service_id) }}">
+        {{ service.name }}
+    </a>
+    ::
+    {% block title %}
+        Delete service
+    {% endblock %}
+{% endblock %}
 
 {% block body %}
 Are you sure you want to delete this service?<br/>

@@ -68,6 +68,17 @@ def new(service_id):
     return render_template('service/payment/new.html', **kwargs)
 
 
+@bp.route('/<int:service_id>/payment/<int:year>/<int:month>')
+def index(service_id, year, month):
+    service = get_service(service_id)
+    payment = get_payment(service_id, year, month)
+    kwargs = {}
+    kwargs['service'] = service
+    kwargs['payment'] = payment
+    kwargs['month_name'] = calendar.month_name
+    return render_template('service/payment/index.html', **kwargs)
+
+
 @bp.route('/<int:service_id>/payment/<int:year>/<int:month>/view')
 def view(service_id, year, month):
     payment = get_payment(service_id, year, month)
