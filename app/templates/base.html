@@ -2,7 +2,6 @@
 <html>
     <head>
         <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
     <body>
         {% block backlink %}<a href="{{ url_for('index') }}">Home</a>{% endblock %}
