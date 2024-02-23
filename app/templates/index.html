@@ -8,7 +8,13 @@
 <h2>Services</h2>
 <a href="{{ url_for('service.new') }}">New service</a>
 <ul>
-    <li><a href="{{ url_for('index.due') }}">... with due payments</a><br/></li>
-    <li><a href="{{ url_for('index.uptodate') }}">... with up-to-date payments</a><br/></li>
+    {% for service in services %}
+    <li>
+        <a href="{{ url_for('service.index', service_id=service.service_id) }}">{{ service.name }}</a>
+        {% if service.active and not service.paid %}
+        <font color="firebrick"><b>(due)</b></font>
+        {% endif %}
+    </li>
+    {% endfor %}
 </ul>
 {% endblock %}

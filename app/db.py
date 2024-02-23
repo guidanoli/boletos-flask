@@ -41,37 +41,18 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 
-def get_services_with_uptodate_payment():
+def get_services():
     db = get_db()
     now = datetime.now()
     services = db.execute(
         '''
-        SELECT *
-        FROM service
-        WHERE service_id IN
+        SELECT *, service_id IN
         (SELECT service_id
         FROM payment
         WHERE year = ?
-        AND month = ?)
-        ''',
-        (now.year, now.month)
-    ).fetchall()
-
-    return services
-
-
-def get_services_with_due_payment():
-    db = get_db()
-    now = datetime.now()
-    services = db.execute(
-        '''
-        SELECT *
+        AND month = ?) AS paid
         FROM service
-        WHERE service_id NOT IN
-        (SELECT service_id
-        FROM payment
-        WHERE year = ?
-        AND month = ?)
+        ORDER BY name
         ''',
         (now.year, now.month)
     ).fetchall()
