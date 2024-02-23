@@ -5,7 +5,7 @@ from flask import Blueprint, render_template
 
 from app.db import get_services
 
-bp = Blueprint('home', __name__)
+bp = Blueprint('index', __name__)
 
 
 @bp.route('/')
@@ -15,4 +15,4 @@ def index():
     kwargs['services'] = services
     kwargs['month_name'] = calendar.month_name
     kwargs['now'] = datetime.now()
-    return render_template('home.html', **kwargs)
+    return render_template('index.html', **kwargs)
