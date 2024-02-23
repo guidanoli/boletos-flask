@@ -40,6 +40,22 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 
+def get_services():
+    db = get_db()
+    services = db.execute(
+        '''
+        SELECT service_id, name, year, month
+        FROM service
+        LEFT JOIN (SELECT service_id as join_column, year, month,
+                   MAX(strftime('%s', printf('%04d-%02d-01', year, month)))
+                   FROM payment
+                   GROUP BY service_id) ON (service_id = join_column)
+        '''
+    ).fetchall()
+
+    return services
+
+
 def get_service(service_id):
     db = get_db()
     service = db.execute(

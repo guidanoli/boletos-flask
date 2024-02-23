@@ -1,14 +1,18 @@
-import flask
+import calendar
+from datetime import datetime
 
-from app.db import get_db
+from flask import Blueprint, render_template
 
-bp = flask.Blueprint('home', __name__)
+from app.db import get_services
+
+bp = Blueprint('home', __name__)
 
 
 @bp.route('/')
 def index():
-    db = get_db()
-    services = db.execute('SELECT * FROM service').fetchall()
+    services = get_services()
     kwargs = {}
     kwargs['services'] = services
-    return flask.render_template('home.html', **kwargs)
+    kwargs['month_name'] = calendar.month_name
+    kwargs['now'] = datetime.now()
+    return render_template('home.html', **kwargs)
