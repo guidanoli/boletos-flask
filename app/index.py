@@ -13,4 +13,5 @@ def index():
     services = get_services()
     kwargs = {}
     kwargs['services'] = services
+    kwargs['show_inactive'] = request.args.get('show_inactive')
     return render_template('index.html', **kwargs)
