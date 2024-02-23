@@ -5,10 +5,18 @@
 {% block header %}{% block title %}Home{% endblock %}{% endblock %}
 
 {% block body %}
-<a href="{{ url_for('service.new') }}">New service</a>
-<ul>
+<a href="{{ url_for('service.new') }}">New service</a><br/>
+<br/>
+<table>
+    <tr>
+        <th>Service</th>
+        <th>View</th>
+    </tr>
     {% for service in services %}
-    <li><a href="{{ url_for('service.index', service_id=service.service_id) }}">{{ service.name }}</a></li>
+    <tr>
+        <td>{{ service.name }}</td>
+        <td><a href="{{ url_for('service.index', service_id=service.service_id) }}" style="text-decoration: none">🔍</a></td>
+    </tr>
     {% endfor %}
-<ul>
+</table>
 {% endblock %}
