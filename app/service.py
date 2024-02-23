@@ -48,3 +48,32 @@ def index(service_id):
     kwargs['payments'] = payments
     kwargs['month_name'] = calendar.month_name
     return render_template('service/index.html', **kwargs)
+
+
+@bp.route('/<int:service_id>/delete', methods=('GET', 'POST'))
+def delete(service_id):
+    service = get_service(service_id)
+
+    if request.method == 'POST':
+        error = None
+
+        db = get_db()
+        try:
+            db.execute(
+                '''
+                DELETE FROM service
+                WHERE service_id = ?
+                ''',
+                (service_id, )
+            )
+            db.commit()
+        except db.IntegrityError:
+            error = 'The server was unable to delete the service from the database.'
+        else:
+            return redirect(url_for('index'))
+
+        flash(error)
+
+    kwargs = {}
+    kwargs['service'] = service
+    return render_template('service/delete.html', **kwargs)
