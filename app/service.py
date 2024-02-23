@@ -77,3 +77,23 @@ def delete(service_id):
     kwargs = {}
     kwargs['service'] = service
     return render_template('service/delete.html', **kwargs)
+
+
+@bp.route('/<int:service_id>/set-active/<int:active>')
+def set_active(service_id, active):
+    service = get_service(service_id)
+    db = get_db()
+    try:
+        db.execute(
+            '''
+            UPDATE service
+            SET active = ?
+            WHERE service_id = ?
+            ''',
+            (active, service_id)
+        )
+        db.commit()
+    except db.IntegrityError:
+        flash('The server was unable to update the service in the database.')
+
+    return redirect(url_for('service.index', service_id=service_id))
