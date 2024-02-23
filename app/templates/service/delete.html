@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <a href="{{ url_for('service.index', service_id=payment.service_id) }}">
-        {{ service.name }}
-    </a>
+    <a href="{{ url_for('service.index', service_id=service.service_id) }}">
+        {{ service.name }}</a>
     ::
     {% block title %}
         Delete service

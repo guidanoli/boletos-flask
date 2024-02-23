@@ -2,12 +2,10 @@
 
 {% block header %}
     <a href="{{ url_for('service.index', service_id=payment.service_id) }}">
-        {{ service.name }}
-    </a>
+        {{ service.name }}</a>
     ::
     <a href="{{ url_for('service.payment.index', service_id=payment.service_id, year=payment.year, month=payment.month) }}">
-        {{ month_name[payment.month] }}/{{ payment.year }}
-    </a>
+        {{ month_name[payment.month] }}/{{ payment.year }}</a>
     ::
     {% block title %}
         Delete payment
