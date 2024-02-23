@@ -76,7 +76,6 @@ def view(service_id, year, month):
 
 @bp.route('/<int:service_id>/payment/<int:year>/<int:month>/delete', methods=('GET', 'POST'))
 def delete(service_id, year, month):
-    print(request.form)
     service = get_service(service_id)
     payment = get_payment(service_id, year, month)
 
