@@ -5,28 +5,9 @@
 {% block header %}{% block title %}Home{% endblock %}{% endblock %}
 
 {% block body %}
-<a href="{{ url_for('service.new') }}">New service</a><br/>
-<br/>
-<table>
-    <tr>
-        <th>Service</th>
-        <th>Payment Status</th>
-        <th>View</th>
-        <th>Delete</th>
-    </tr>
-    {% for service in services %}
-    <tr>
-        <td>{{ service.name }}</td>
-        <td>
-            {% if service.year and service.month and (service.year, service.month) >= (now.year, now.month) %}
-            ✅
-            {% else %}
-            ❌
-            {% endif %}
-        </td>
-        <td><a href="{{ url_for('service.index', service_id=service.service_id) }}" style="text-decoration: none">🔍</a></td>
-        <td><a href="{{ url_for('service.delete', service_id=service.service_id) }}" style="text-decoration: none">🗑️</a></td>
-    </tr>
-    {% endfor %}
-</table>
+<ul>
+    <li><a href="{{ url_for('service.new') }}">New service</a><br/></li>
+    <li><a href="{{ url_for('index.due') }}">Due payments</a><br/></li>
+    <li><a href="{{ url_for('index.uptodate') }}">Up-to-date payments</a><br/></li>
+</ul>
 {% endblock %}

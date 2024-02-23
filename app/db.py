@@ -1,3 +1,4 @@
+from datetime import datetime
 import sqlite3
 
 import click
@@ -40,17 +41,39 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 
-def get_services():
+def get_services_with_uptodate_payment():
     db = get_db()
+    now = datetime.now()
     services = db.execute(
         '''
-        SELECT service_id, name, year, month
+        SELECT *
         FROM service
-        LEFT JOIN (SELECT service_id as join_column, year, month,
-                   MAX(strftime('%s', printf('%04d-%02d-01', year, month)))
-                   FROM payment
-                   GROUP BY service_id) ON (service_id = join_column)
+        WHERE service_id IN
+        (SELECT service_id
+        FROM payment
+        WHERE year = ?
+        AND month = ?)
+        ''',
+        (now.year, now.month)
+    ).fetchall()
+
+    return services
+
+
+def get_services_with_due_payment():
+    db = get_db()
+    now = datetime.now()
+    services = db.execute(
         '''
+        SELECT *
+        FROM service
+        WHERE service_id NOT IN
+        (SELECT service_id
+        FROM payment
+        WHERE year = ?
+        AND month = ?)
+        ''',
+        (now.year, now.month)
     ).fetchall()
 
     return services
