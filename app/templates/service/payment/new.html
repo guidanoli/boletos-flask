@@ -13,20 +13,9 @@
 {% block body %}
 <form method="post" enctype="multipart/form-data">
     Date:
-    <select name="month">
-        {% for month_number, month_name in months %}
-        <option
-            value="{{ month_number }}"
-            {% if month_number == now.month %}
-            selected
-            {% endif %}
-        >
-            {{ month_name }}
-        </option>
-        {% endfor %}
-    </select>
+    <input type="number" name="year" size="6" value="{{ now.year }}">
     /
-    <input type="number" name="year" size="8" value="{{ now.year }}"><br/>
+    <input type="number" name="month" min="1" max="12" size="4" value="{{ now.month }}"><br/>
     <br/>
     <label for="file">File:</label>
     <input type="file" name="file" accept="application/pdf,image/*" required /><br/>

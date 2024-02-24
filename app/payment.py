@@ -1,7 +1,6 @@
 import os
 import uuid
 from datetime import datetime
-import calendar
 
 from flask import Blueprint, render_template, request, redirect, url_for, current_app, send_from_directory, flash
 
@@ -63,7 +62,6 @@ def new(service_id):
 
     kwargs = {}
     kwargs['service'] = service
-    kwargs['months'] = enumerate(calendar.month_name[1:], start=1)
     kwargs['now'] = datetime.now()
     return render_template('service/payment/new.html', **kwargs)
 
