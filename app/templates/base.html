@@ -5,9 +5,11 @@
     </head>
     <body>
         <h1>{% block header %}{% endblock %}</h1>
-        {% for message in get_flashed_messages() %}
-        <p>[!] {{ message }}</p>
-        {% endfor %}
+        <ul style="color: firebrick">
+            {% for message in get_flashed_messages() %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
         {% block body %}{% endblock %}
     </body>
 </html>
