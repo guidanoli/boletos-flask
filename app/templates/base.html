@@ -4,7 +4,6 @@
         <title>{% block title %}{% endblock %}</title>
     </head>
     <body>
-        {% block backlink %}<a href="{{ url_for('index') }}">Home</a>{% endblock %}
         <h1>{% block header %}{% endblock %}</h1>
         {% for message in get_flashed_messages() %}
         <p>[!] {{ message }}</p>
