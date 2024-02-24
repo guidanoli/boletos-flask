@@ -1,5 +1,3 @@
-import calendar
-
 from flask import Blueprint, request, render_template, redirect, flash, url_for, abort
 
 from . import payment
@@ -46,7 +44,6 @@ def index(service_id):
     kwargs = {}
     kwargs['service'] = service
     kwargs['payments'] = payments
-    kwargs['month_name'] = calendar.month_name
     return render_template('service/index.html', **kwargs)
 
 

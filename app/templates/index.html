@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% import 'macros.html' as macros %}
+
 {% block header %}{% block title %}Services{% endblock %}{% endblock %}
 
 {% block body %}
@@ -7,7 +9,7 @@
 <ul>
     {% for service in services if show_inactive or service.active %}
     <li>
-        <a href="{{ url_for('service.index', service_id=service.service_id) }}">{{ service.name }}</a>
+        {{ macros.service_as_linked_text(service) }}
         {% if not service.active %}
         <span class="warning">(inactive)</span>
         {% elif not service.paid %}

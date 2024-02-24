@@ -75,7 +75,6 @@ def index(service_id, year, month):
     kwargs = {}
     kwargs['service'] = service
     kwargs['payment'] = payment
-    kwargs['month_name'] = calendar.month_name
     return render_template('service/payment/index.html', **kwargs)
 
 
@@ -115,5 +114,4 @@ def delete(service_id, year, month):
     kwargs = {}
     kwargs['service'] = service
     kwargs['payment'] = payment
-    kwargs['month_name'] = calendar.month_name
     return render_template('service/payment/delete.html', **kwargs)

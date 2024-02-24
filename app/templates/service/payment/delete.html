@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
+{% import 'macros.html' as macros %}
+
 {% block header %}
-    <a href="{{ url_for('service.index', service_id=payment.service_id) }}">
-        {{ service.name }}</a>
+    {{ macros.service_as_linked_text(service) }}
     ::
-    <a href="{{ url_for('service.payment.index', service_id=payment.service_id, year=payment.year, month=payment.month) }}">
-        {{ month_name[payment.month] }}/{{ payment.year }}</a>
+    {{ macros.payment_as_linked_text(payment) }}
     ::
     {% block title %}
         Delete payment

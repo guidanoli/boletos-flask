@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
-{% block header %}{% block title %}{{ service.name }}{% endblock %}{% endblock %}
+{% import 'macros.html' as macros %}
+
+{% block header %}{% block title %}{{ macros.service_as_text(service) }}{% endblock %}{% endblock %}
 
 {% block body %}
 {% if service.active %}
@@ -14,9 +16,7 @@
 <ul>
     {% for payment in payments %}
     <li>
-        <a href="{{ url_for('service.payment.index', service_id=payment.service_id, year=payment.year, month=payment.month) }}">
-            {{ month_name[payment.month] }}/{{ payment.year }}
-        </a>
+        {{ macros.payment_as_linked_text(payment) }}
     </li>
     {% endfor %}
 </ul>

@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
+{% import 'macros.html' as macros %}
+
 {% block header %}
-    <a href="{{ url_for('service.index', service_id=service.service_id) }}">
-        {{ service.name }}</a>
+    {{ macros.service_as_linked_text(service) }}
     ::
     {% block title %}
         New payment
@@ -13,14 +14,14 @@
 <form method="post" enctype="multipart/form-data">
     Date:
     <select name="month">
-        {% for value, month in months %}
+        {% for month_number, month_name in months %}
         <option
-            value="{{ value }}"
-            {% if value == now.month %}
+            value="{{ month_number }}"
+            {% if month_number == now.month %}
             selected
             {% endif %}
         >
-            {{ month }}
+            {{ month_name }}
         </option>
         {% endfor %}
     </select>
