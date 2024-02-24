@@ -9,9 +9,9 @@
     <li>
         <a href="{{ url_for('service.index', service_id=service.service_id) }}">{{ service.name }}</a>
         {% if not service.active %}
-        <font color="firebrick"><b>(inactive)</b></font>
+        <span class="warning">(inactive)</span>
         {% elif not service.paid %}
-        <font color="firebrick"><b>(due)</b></font>
+        <span class="warning">(due)</span>
         {% endif %}
     </li>
     {% endfor %}
