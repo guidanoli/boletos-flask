@@ -7,6 +7,14 @@
 {% block title %}Services{% endblock %}
 
 {% block body %}
+    <i>Inactive services:
+        {% if show_inactive %}
+            <a href="{{ url_for('index.hide_inactive') }}">shown</a>
+        {% else %}
+            <a href="{{ url_for('index.show_inactive') }}">hidden</a>
+        {% endif %}
+    </i><br/>
+    <br/>
     <a href="{{ url_for('service.new') }}">New service</a><br/>
     <ul>
         {% for service in services if show_inactive or service.active %}
@@ -20,11 +28,4 @@
             </li>
         {% endfor %}
     </ul>
-    <i>Show inactive services:
-        {% if show_inactive %}
-            <b>on</b> | <a href="{{ url_for('index.hide_inactive') }}">off</a>
-        {% else %}
-            <a href="{{ url_for('index.show_inactive') }}">on</a> | <b>off</b>
-        {% endif %}
-    </i>
 {% endblock %}
