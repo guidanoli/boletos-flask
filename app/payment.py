@@ -16,10 +16,14 @@ def get_extension(filename):
         return filename.rsplit('.', 1)[1].lower()
 
 
+def get_upload_path(filename):
+    return os.path.join(current_app.config['UPLOADS_DIR'], filename)
+
+
 def generate_filename(ext):
     while True:
         filename = str(uuid.uuid4()) + '.' + ext
-        filepath = os.path.join(current_app.config['UPLOADS_DIR'], filename)
+        filepath = get_upload_path(filename)
         if not os.path.exists(filepath):
             return filename, filepath
 
@@ -105,6 +109,7 @@ def delete(service_id, year, month):
         except db.IntegrityError as e:
             error = e
         else:
+            os.remove(get_upload_path(payment['filename']))
             return redirect(url_for('service.index', service_id=service_id))
 
         flash(error)
