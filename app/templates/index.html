@@ -21,8 +21,8 @@
         {% endfor %}
     </ul>
     {% if show_inactive %}
-        <a href="{{ url_for('index') }}">Hide inactive services</a>
+        <a href="{{ url_for('index.hide_inactive') }}">Hide inactive services</a>
     {% else %}
-        <a href="{{ url_for('index', show_inactive=1) }}">Show inactive services</a>
+        <a href="{{ url_for('index.show_inactive') }}">Show inactive services</a>
     {% endif %}
 {% endblock %}
