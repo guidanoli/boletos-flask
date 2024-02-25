@@ -1,9 +1,9 @@
 import os
-import uuid
 from datetime import datetime
 
-from flask import Blueprint, render_template, request, redirect, url_for, current_app, send_from_directory, flash
+from flask import Blueprint, render_template, request, redirect, url_for, current_app, flash
 
+from app.upload import get_upload_path, send_upload, generate_filename, remove_upload
 from app.db import get_db, get_service, get_payment
 
 bp = Blueprint('payment', __name__)
@@ -14,18 +14,6 @@ ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 def get_extension(filename):
     if '.' in filename:
         return filename.rsplit('.', 1)[1].lower()
-
-
-def get_upload_path(filename):
-    return os.path.join(current_app.config['UPLOADS_DIR'], filename)
-
-
-def generate_filename(ext):
-    while True:
-        filename = str(uuid.uuid4()) + '.' + ext
-        filepath = get_upload_path(filename)
-        if not os.path.exists(filepath):
-            return filename, filepath
 
 
 @bp.route('/<int:service_id>/payment/new', methods=('GET', 'POST'))
@@ -83,7 +71,7 @@ def index(service_id, year, month):
 @bp.route('/<int:service_id>/payment/<int:year>/<int:month>/view')
 def view(service_id, year, month):
     payment = get_payment(service_id, year, month)
-    return send_from_directory(current_app.config['UPLOADS_DIR'], payment['filename'])
+    return send_upload(payment['filename'])
 
 
 @bp.route('/<int:service_id>/payment/<int:year>/<int:month>/delete', methods=('GET', 'POST'))
@@ -109,7 +97,7 @@ def delete(service_id, year, month):
         except db.IntegrityError as e:
             error = e
         else:
-            os.remove(get_upload_path(payment['filename']))
+            remove_upload(payment['filename'])
             return redirect(url_for('service.index', service_id=service_id))
 
         flash(error)
