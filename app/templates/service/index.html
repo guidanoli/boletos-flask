@@ -5,21 +5,21 @@
 {% block header %}{% block title %}{{ macros.service_as_text(service) }}{% endblock %}{% endblock %}
 
 {% block body %}
-<i>Frequency: {{ macros.frequency_as_text(service.frequency) }}</i><br/>
-<br/>
-{% if service.active %}
-<a href="{{ url_for('service.set_active', service_id=service.service_id, active=0) }}">Inactivate service</a><br/>
-{% else %}
-<a href="{{ url_for('service.set_active', service_id=service.service_id, active=1) }}">Activate service</a><br/>
-{% endif %}
-<a href="{{ url_for('service.delete', service_id=service.service_id) }}">Delete service</a><br/>
-<h2>Payments</h2>
-<a href="{{ url_for('service.payment.new', service_id=service.service_id) }}">New payment</a><br/>
-<ul>
-    {% for payment in payments %}
-    <li>
-        {{ macros.payment_as_linked_text(payment) }}
-    </li>
-    {% endfor %}
-</ul>
+    <i>Frequency: {{ macros.frequency_as_text(service.frequency) }}</i><br/>
+    <br/>
+    {% if service.active %}
+        <a href="{{ url_for('service.set_active', service_id=service.service_id, active=0) }}">Inactivate service</a><br/>
+    {% else %}
+        <a href="{{ url_for('service.set_active', service_id=service.service_id, active=1) }}">Activate service</a><br/>
+    {% endif %}
+    <a href="{{ url_for('service.delete', service_id=service.service_id) }}">Delete service</a><br/>
+    <h2>Payments</h2>
+    <a href="{{ url_for('service.payment.new', service_id=service.service_id) }}">New payment</a><br/>
+    <ul>
+        {% for payment in payments %}
+            <li>
+                {{ macros.payment_as_linked_text(payment) }}
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

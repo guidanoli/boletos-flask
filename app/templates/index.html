@@ -5,22 +5,22 @@
 {% block header %}{% block title %}Services{% endblock %}{% endblock %}
 
 {% block body %}
-<a href="{{ url_for('service.new') }}">New service</a><br/>
-<ul>
-    {% for service in services if show_inactive or service.active %}
-    <li>
-        {{ macros.service_as_linked_text(service) }}
-        {% if not service.active %}
-        <span class="warning">(inactive)</span>
-        {% elif not service.paid %}
-        <span class="warning">(due)</span>
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-{% if show_inactive %}
-<a href="{{ url_for('index') }}">Hide inactive services</a>
-{% else %}
-<a href="{{ url_for('index', show_inactive=1) }}">Show inactive services</a>
-{% endif %}
+    <a href="{{ url_for('service.new') }}">New service</a><br/>
+    <ul>
+        {% for service in services if show_inactive or service.active %}
+            <li>
+                {{ macros.service_as_linked_text(service) }}
+                {% if not service.active %}
+                    <span class="warning">(inactive)</span>
+                {% elif not service.paid %}
+                    <span class="warning">(due)</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% if show_inactive %}
+        <a href="{{ url_for('index') }}">Hide inactive services</a>
+    {% else %}
+        <a href="{{ url_for('index', show_inactive=1) }}">Show inactive services</a>
+    {% endif %}
 {% endblock %}
