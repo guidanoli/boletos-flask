@@ -2,6 +2,8 @@
 
 {% import 'macros.html' as macros %}
 
+{% block parenturl %}{{ url_for('index') }}{% endblock %}
+
 {% block header %}{% block title %}{{ macros.service_as_text(service) }}{% endblock %}{% endblock %}
 
 {% block body %}

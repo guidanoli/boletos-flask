@@ -2,21 +2,14 @@
 
 {% import 'macros.html' as macros %}
 
-{% block header %}
-    {{ macros.service_as_linked_text(service) }}
-    ::
-    {{ macros.payment_as_linked_text(payment) }}
-    ::
-    {% block title %}
-        Delete payment
-    {% endblock %}
-{% endblock %}
+{% block parenturl %}{{ url_for('service.payment.index', service_id=payment.service_id, year=payment.year, month=payment.month) }}{% endblock %}
+
+{% block header %}{% block title %}Delete payment{% endblock %}{% endblock %}
 
 {% block body %}
-    Are you sure you want to delete this payment?<br/>
+    Are you sure you want to delete the payment made on {{ macros.payment_as_text(payment) | trim }} for {{ macros.service_as_text(service) | trim }}?<br/>
     <br/>
     <form>
         <input type="submit" value="Yes" formmethod="post">
-        <input type="submit" value="Cancel" formaction="{{ url_for('service.payment.index', service_id=payment.service_id, year=payment.year, month=payment.month) }}">
     </form>
 {% endblock %}

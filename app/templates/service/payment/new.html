@@ -2,15 +2,13 @@
 
 {% import 'macros.html' as macros %}
 
-{% block header %}
-    {{ macros.service_as_linked_text(service) }}
-    ::
-    {% block title %}
-        New payment
-    {% endblock %}
-{% endblock %}
+{% block parenturl %}{{ url_for('service.index', service_id=service.service_id) }}{% endblock %}
+
+{% block header %}{% block title %}New payment{% endblock %}{% endblock %}
 
 {% block body %}
+    <i>Service: {{ macros.service_as_text(service) | trim }}</i><br/>
+    <br/>
     <form method="post" enctype="multipart/form-data">
         Date:
         <input type="number" name="year" size="6" value="{{ now.year }}">
