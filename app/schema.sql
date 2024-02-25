@@ -9,7 +9,7 @@ CREATE TABLE service (
 );
 
 CREATE TABLE payment (
-    service_id INTEGER NOT NULL REFERENCES service(service_id),
+    service_id INTEGER NOT NULL REFERENCES service(service_id) ON DELETE CASCADE,
     year INTEGER NOT NULL,
     month INTEGER NOT NULL,
     filename VARCHAR NOT NULL,
