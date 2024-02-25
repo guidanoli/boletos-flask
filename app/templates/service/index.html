@@ -5,6 +5,13 @@
 {% block header %}{% block title %}{{ macros.service_as_text(service) }}{% endblock %}{% endblock %}
 
 {% block body %}
+    <i>Status:
+        {% if service.active %}
+            Active
+        {% else %}
+            Inactive
+        {% endif %}
+    </i><br/>
     <i>Frequency: {{ macros.frequency_as_text(service.frequency) }}</i><br/>
     <br/>
     {% if service.active %}
