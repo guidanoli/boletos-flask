@@ -41,9 +41,6 @@ def create_app(test_config=None):
     from . import service
     app.register_blueprint(service.bp)
 
-    from . import payment
-    app.register_blueprint(payment.bp)
-
     app.add_url_rule('/', endpoint='index')
 
     return app
