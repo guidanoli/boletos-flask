@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, flash, url_for, abort
 
 from . import payment
+from app.upload import remove_upload
 from app.db import get_db, get_service, get_payments_for
 
 bp = Blueprint('service', __name__, url_prefix='/service')
@@ -57,6 +58,7 @@ def delete(service_id):
     service = get_service(service_id)
 
     if request.method == 'POST':
+        payments = get_payments_for(service_id)
         error = None
 
         db = get_db()
@@ -72,6 +74,9 @@ def delete(service_id):
         except db.IntegrityError as e:
             error = e
         else:
+            for payment in payments:
+                remove_upload(payment['filename'])
+
             return redirect(url_for('index'))
 
         flash(error)
