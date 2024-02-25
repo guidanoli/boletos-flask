@@ -4,7 +4,7 @@
 
 {% block parenturl %}{{ url_for('service.payment.index', service_id=payment.service_id, year=payment.year, month=payment.month) }}{% endblock %}
 
-{% block header %}{% block title %}Delete payment{% endblock %}{% endblock %}
+{% block title %}Delete payment{% endblock %}
 
 {% block body %}
     Are you sure you want to delete the payment made on {{ macros.payment_as_text(payment) | trim }} for {{ macros.service_as_text(service) | trim }}?<br/>

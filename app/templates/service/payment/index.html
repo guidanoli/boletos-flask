@@ -4,13 +4,7 @@
 
 {% block parenturl %}{{ url_for('service.index', service_id=payment.service_id) }}{% endblock %}
 
-{% block header %}
-    {% block title %}
-        {{ macros.service_as_text(service) }}
-        @
-        {{ macros.payment_as_text(payment) }}
-    {% endblock %}
-{% endblock %}
+{% block title %}{{ macros.service_as_text(service) }} @ {{ macros.payment_as_text(payment) }}{% endblock %}
 
 {% block body %}
     <ul>

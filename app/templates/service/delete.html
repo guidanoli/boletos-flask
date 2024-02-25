@@ -4,7 +4,7 @@
 
 {% block parenturl %}{{ url_for('service.index', service_id=service.service_id) }}{% endblock %}
 
-{% block header %}{% block title %}Delete service{% endblock %}{% endblock %}
+{% block title %}Delete service{% endblock %}
 
 {% block body %}
     Are you sure you want to delete service {{ macros.service_as_text(service) | trim }}?<br/>

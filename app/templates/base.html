@@ -8,7 +8,7 @@
         {% block backlink %}
             <a href="{% block parenturl %}{% endblock %}">< Back</a><br />
         {% endblock %}
-        <h1>{% block header %}{% endblock %}</h1>
+        <h1>{{ self.title() }}</h1>
         <ul class="warning">
             {% for message in get_flashed_messages() %}
                 <li>{{ message }}</li>
