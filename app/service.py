@@ -30,8 +30,8 @@ def new():
                     (name, frequency)
                 )
                 db.commit()
-            except db.IntegrityError:
-                error = 'A service with this name already exists.'
+            except db.IntegrityError as e:
+                error = e
             else:
                 return redirect(url_for('index'))
 
@@ -69,8 +69,8 @@ def delete(service_id):
                 (service_id, )
             )
             db.commit()
-        except db.IntegrityError:
-            error = 'The server was unable to delete the service from the database.'
+        except db.IntegrityError as e:
+            error = e
         else:
             return redirect(url_for('index'))
 
@@ -95,7 +95,7 @@ def set_active(service_id, active):
             (active, service_id)
         )
         db.commit()
-    except db.IntegrityError:
-        flash('The server was unable to update the service in the database.')
+    except db.IntegrityError as e:
+        flash(e)
 
     return redirect(url_for('service.index', service_id=service_id))

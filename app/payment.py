@@ -53,8 +53,8 @@ def new(service_id):
                     (service_id, year, month, filename)
                 )
                 db.commit()
-            except db.IntegrityError:
-                error = 'A payment for this service and date already exist.'
+            except db.IntegrityError as e:
+                error = e
             else:
                 return redirect(url_for('service.index', service_id=service_id))
 
@@ -102,8 +102,8 @@ def delete(service_id, year, month):
                 (service_id, year, month)
             )
             db.commit()
-        except db.IntegrityError:
-            error = 'The server was unable to delete the payment from the database.'
+        except db.IntegrityError as e:
+            error = e
         else:
             return redirect(url_for('service.index', service_id=service_id))
 
