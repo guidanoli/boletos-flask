@@ -5,6 +5,8 @@
 {% block header %}{% block title %}{{ macros.service_as_text(service) }}{% endblock %}{% endblock %}
 
 {% block body %}
+<i>Frequency: {{ macros.frequency_as_text(service.frequency) }}</i><br/>
+<br/>
 {% if service.active %}
 <a href="{{ url_for('service.set_active', service_id=service.service_id, active=0) }}">Inactivate service</a><br/>
 {% else %}

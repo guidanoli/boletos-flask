@@ -21,3 +21,11 @@
 {%- macro payment_as_linked_text(payment) %}
 <a href="{{ payment_as_url(payment) }}">{{ payment_as_text(payment) | trim }}</a>
 {% endmacro %}
+
+{%- macro frequency_as_text(frequency) %}
+{% if frequency == 'm' %}
+Monthly
+{% elif frequency == 'y' %}
+Yearly
+{% endif %}
+{% endmacro %}
