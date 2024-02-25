@@ -1,11 +1,25 @@
 {% extends 'base.html' %}
 
+{% import 'macros.html' as macros %}
+
 {% block header %}{% block title %}New service{% endblock %}{% endblock %}
 
 {% block body %}
     <form method="post">
         <label for="name">Name:</label>
         <input name="name" required><br/>
+        <br/>
+        <label for="frequency">Frequency:</label>
+        <select name="frequency" required>
+            {% for frequency in frequencies %}
+                <option
+                        value="{{ frequency }}"
+                        {% if frequency == request.form.get('frequency') %}selected{% endif %}
+                        >
+                        {{ macros.frequency_as_text(frequency) }}
+                </option>
+            {% endfor %}
+        </select><br/>
         <br/>
         <input type="submit" value="Submit">
     </form>

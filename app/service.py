@@ -11,20 +11,23 @@ bp.register_blueprint(payment.bp)
 def new():
     if request.method == 'POST':
         name = request.form.get('name')
+        frequency = request.form.get('frequency')
         db = get_db()
         error = None
 
         if not name:
             error = 'A name is required.'
+        elif not frequency:
+            error = 'A frequency is required.'
 
         if error is None:
             try:
                 db.execute(
                     '''
-                    INSERT INTO service (name)
-                    VALUES (?)
+                    INSERT INTO service (name, frequency)
+                    VALUES (?, ?)
                     ''',
-                    (name, )
+                    (name, frequency)
                 )
                 db.commit()
             except db.IntegrityError:
@@ -34,7 +37,9 @@ def new():
 
         flash(error)
 
-    return render_template('service/new.html')
+    kwargs = {}
+    kwargs['frequencies'] = ('m', 'y')
+    return render_template('service/new.html', **kwargs)
 
 
 @bp.route('/<int:service_id>')
