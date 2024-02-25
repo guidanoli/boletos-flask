@@ -9,7 +9,7 @@
 {% block body %}
     <form method="post">
         <label for="name">Name:</label>
-        <input name="name" value="{{ request.form.get('name') }}" required><br/>
+        <input name="name" value="{{ request.form.name }}" required><br/>
         <br/>
         <label for="frequency">Frequency:</label>
         <select name="frequency" required>
