@@ -14,4 +14,4 @@ CREATE TABLE payment (
     month INTEGER NOT NULL,
     filename VARCHAR NOT NULL,
     PRIMARY KEY (service_id, year, month)
-)
+);
