@@ -47,10 +47,11 @@ def get_services():
     services = db.execute(
         '''
         SELECT *, service_id IN
-        (SELECT service_id
-        FROM payment
+        (SELECT s.service_id
+        FROM payment p JOIN service s
+        ON p.service_id = s.service_id
         WHERE year = ?
-        AND month = ?) AS paid
+        AND (frequency = 'y' OR month = ?)) AS paid
         FROM service
         ORDER BY name
         ''',
