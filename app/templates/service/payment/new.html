@@ -10,12 +10,12 @@
     <i>Service: {{ macros.service_as_text(service) | trim }}</i><br/>
     <br/>
     <form method="post" enctype="multipart/form-data">
-        Date:
+        * Date:
         <input type="number" name="year" size="6" value="{{ now.year }}">
         /
         <input type="number" name="month" min="1" max="12" size="4" value="{{ now.month }}"><br/>
         <br/>
-        <label for="file">File:</label>
+        <label for="file">* File:</label>
         <input type="file" name="file" accept="application/pdf,image/*" required /><br/>
         <br/>
         <input type="submit" value="Submit">
