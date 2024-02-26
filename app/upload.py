@@ -42,3 +42,7 @@ def store_upload(file, allowed_extensions):
         filename, filepath = generate_filename(ext)
         file.save(filepath)
         return filename
+
+
+def list_upload_dir():
+    return os.listdir(get_upload_dir())

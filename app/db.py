@@ -1,7 +1,7 @@
+import operator
 from datetime import datetime
 import sqlite3
 
-import click
 from flask import current_app, g, abort
 
 
@@ -24,22 +24,8 @@ def close_db(e=None):
         db.close()
 
 
-def init_db():
-    db = get_db()
-    with current_app.open_resource('schema.sql') as f:
-        db.executescript(f.read().decode('utf8'))
-
-
-@click.command('init-db')
-def init_db_command():
-    """Clear the existing data and create new tables."""
-    init_db()
-    click.echo('Initialized the database.')
-
-
 def init_app(app):
     app.teardown_appcontext(close_db)
-    app.cli.add_command(init_db_command)
 
 
 def get_services():
@@ -111,3 +97,33 @@ def get_payment(service_id, year, month):
         abort(404)
 
     return payment
+
+
+def get_service_images():
+    db = get_db()
+    images = db.execute(
+        '''
+        SELECT image
+        FROM service
+        WHERE image IS NOT NULL
+        '''
+    ).fetchall()
+
+    return list(map(operator.itemgetter('image'), images))
+
+
+def get_payment_files():
+    db = get_db()
+    files = db.execute(
+        '''
+        SELECT filename
+        FROM payment
+        WHERE filename IS NOT NULL
+        '''
+    ).fetchall()
+
+    return list(map(operator.itemgetter('filename'), files))
+
+
+def get_uploads():
+    return get_service_images() + get_payment_files()
