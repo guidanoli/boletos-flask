@@ -3,12 +3,10 @@ from datetime import datetime
 
 from flask import Blueprint, render_template, request, redirect, url_for, current_app, flash
 
-from app.upload import get_upload_path, send_upload, generate_filename, remove_upload, get_extension
+from app.upload import send_upload, get_extension, store_upload, IMAGE, PDF
 from app.db import get_db, get_service, get_payment
 
 bp = Blueprint('payment', __name__)
-
-ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 
 @bp.route('/<int:service_id>/payment/new', methods=('GET', 'POST'))
@@ -18,15 +16,13 @@ def new(service_id):
     if request.method == 'POST':
         error = None
 
-        file = request.files['file']
         year = int(request.form['year'])
         month = int(request.form['month'])
+        file = request.files['file']
 
-        ext = get_extension(file.filename)
-        if ext in ALLOWED_EXTENSIONS:
-            filename, filepath = generate_filename(ext)
-        else:
-            error = 'Invalid file extension.'
+        filename = store_upload(file, PDF | IMAGE)
+        if not filename:
+            error = 'Invalid file.'
 
         if error is None:
             db = get_db()
@@ -42,7 +38,6 @@ def new(service_id):
             except db.IntegrityError as e:
                 error = e
             else:
-                file.save(filepath)
                 return redirect(url_for('service.index', service_id=service_id))
 
         flash(error)
