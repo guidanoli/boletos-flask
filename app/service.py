@@ -12,11 +12,11 @@ bp.register_blueprint(payment.bp)
 @bp.route('/new', methods=('GET', 'POST'))
 def new():
     if request.method == 'POST':
+        error = None
+
         name = request.form.get('name')
         frequency = request.form.get('frequency')
         file = request.files.get('image')
-        db = get_db()
-        error = None
         filename = None
 
         if not name:
@@ -29,6 +29,7 @@ def new():
                 error = 'Invalid file.'
 
         if error is None:
+            db = get_db()
             try:
                 db.execute(
                     '''
