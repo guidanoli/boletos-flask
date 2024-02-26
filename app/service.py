@@ -1,18 +1,22 @@
 from flask import Blueprint, request, render_template, redirect, flash, url_for, abort
 
 from . import payment
-from app.upload import remove_upload
+from app.upload import remove_upload, get_extension, generate_filename
 from app.db import get_db, get_service, get_payments_for
 
 bp = Blueprint('service', __name__, url_prefix='/service')
 
 bp.register_blueprint(payment.bp)
 
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
 @bp.route('/new', methods=('GET', 'POST'))
 def new():
     if request.method == 'POST':
         name = request.form.get('name')
         frequency = request.form.get('frequency')
+        file = request.files.get('image')
         db = get_db()
         error = None
 
@@ -21,19 +25,27 @@ def new():
         elif not frequency:
             error = 'A frequency is required.'
 
+        if error is None and file is not None:
+            ext = get_extension(file.filename)
+            if ext in ALLOWED_EXTENSIONS:
+                filename, filepath = generate_filename(ext)
+            else:
+                error = 'Invalid file extension.'
+
         if error is None:
             try:
                 db.execute(
                     '''
-                    INSERT INTO service (name, frequency)
-                    VALUES (?, ?)
+                    INSERT INTO service (name, frequency, image)
+                    VALUES (?, ?, ?)
                     ''',
-                    (name, frequency)
+                    (name, frequency, filename)
                 )
                 db.commit()
             except db.IntegrityError as e:
                 error = e
             else:
+                file.save(filepath)
                 return redirect(url_for('index'))
 
         flash(error)
