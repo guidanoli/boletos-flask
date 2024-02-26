@@ -4,7 +4,7 @@ import uuid
 from flask import current_app, send_from_directory
 
 
-IMAGES = {'png', 'jpg', 'jpeg', 'gif'}
+IMAGE = {'png', 'jpg', 'jpeg', 'gif'}
 PDF = {'pdf'}
 
 def get_upload_dir():

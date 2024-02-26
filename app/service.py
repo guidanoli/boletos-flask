@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, flash, url_for, abort
 
 from . import payment
-from app.upload import remove_upload, send_upload, store_upload, IMAGES
+from app.upload import send_upload, store_upload, IMAGE
 from app.db import get_db, get_service, get_payments_for
 
 bp = Blueprint('service', __name__, url_prefix='/service')
@@ -24,7 +24,7 @@ def new():
         elif not frequency:
             error = 'A frequency is required.'
         elif file:
-            filename = store_upload(file, IMAGES)
+            filename = store_upload(file, IMAGE)
             if not filename:
                 error = 'Invalid file.'
 
