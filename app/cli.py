@@ -3,7 +3,7 @@ from flask import current_app
 import click
 
 from app.db import get_db, get_uploads
-from app.upload import list_upload_dir, get_upload_path
+from app.upload import list_upload_dir, get_upload_path, generate_filename
 
 
 def init_db():
@@ -38,6 +38,16 @@ def prune_uploads_command():
     click.echo('Pruned uploads.')
 
 
+@click.command('generate-upload-name')
+@click.option('--ext', required=True)
+def generate_upload_name_command(ext):
+    """Generate a unique name for an upload."""
+    filename, filepath = generate_filename(ext)
+    click.echo('Name: {}'.format(filename))
+    click.echo('Path: {}'.format(filepath))
+
+
 def init_app(app):
     app.cli.add_command(init_db_command)
     app.cli.add_command(prune_uploads_command)
+    app.cli.add_command(generate_upload_name_command)
