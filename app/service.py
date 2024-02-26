@@ -87,9 +87,6 @@ def delete(service_id):
         except db.IntegrityError as e:
             error = e
         else:
-            for payment in payments:
-                remove_upload(payment['filename'])
-
             return redirect(url_for('index'))
 
         flash(error)
