@@ -4,6 +4,9 @@ import uuid
 from flask import current_app, send_from_directory
 
 
+IMAGES = {'png', 'jpg', 'jpeg', 'gif'}
+PDF = {'pdf'}
+
 def get_upload_dir():
     return current_app.config['UPLOADS_DIR']
 
@@ -31,3 +34,11 @@ def remove_upload(filename):
 def get_extension(filename):
     if '.' in filename:
         return filename.rsplit('.', 1)[1].lower()
+
+
+def store_upload(file, allowed_extensions):
+    ext = get_extension(file.filename)
+    if ext in allowed_extensions:
+        filename, filepath = generate_filename(ext)
+        file.save(filepath)
+        return filename
