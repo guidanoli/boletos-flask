@@ -1,7 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, flash, url_for, abort
 
 from . import payment
-from app.upload import remove_upload, get_extension, generate_filename
+from app.upload import remove_upload, get_extension, generate_filename, send_upload
 from app.db import get_db, get_service, get_payments_for
 
 bp = Blueprint('service', __name__, url_prefix='/service')
@@ -63,6 +63,12 @@ def index(service_id):
     kwargs['service'] = service
     kwargs['payments'] = payments
     return render_template('service/index.html', **kwargs)
+
+
+@bp.route('/<int:service_id>/image')
+def image(service_id):
+    service = get_service(service_id)
+    return send_upload(service['image'])
 
 
 @bp.route('/<int:service_id>/delete', methods=('GET', 'POST'))
