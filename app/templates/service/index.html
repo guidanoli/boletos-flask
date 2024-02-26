@@ -7,6 +7,10 @@
 {% block title %}{{ macros.service_as_text(service) }}{% endblock %}
 
 {% block body %}
+    {% if service.image %}
+        <img height="300" src="{{ url_for('service.image', service_id=service.service_id) }}" /><br/>
+        <br/>
+    {% endif %}
     <i>Status:
         {% if service.active %}
             Active
