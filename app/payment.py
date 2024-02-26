@@ -25,7 +25,6 @@ def new(service_id):
         ext = get_extension(file.filename)
         if ext in ALLOWED_EXTENSIONS:
             filename, filepath = generate_filename(ext)
-            file.save(filepath)
         else:
             error = 'Invalid file extension.'
 
@@ -43,6 +42,7 @@ def new(service_id):
             except db.IntegrityError as e:
                 error = e
             else:
+                file.save(filepath)
                 return redirect(url_for('service.index', service_id=service_id))
 
         flash(error)
