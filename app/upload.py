@@ -26,3 +26,8 @@ def generate_filename(ext):
 
 def remove_upload(filename):
     os.remove(get_upload_path(filename))
+
+
+def get_extension(filename):
+    if '.' in filename:
+        return filename.rsplit('.', 1)[1].lower()

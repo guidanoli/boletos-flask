@@ -3,17 +3,12 @@ from datetime import datetime
 
 from flask import Blueprint, render_template, request, redirect, url_for, current_app, flash
 
-from app.upload import get_upload_path, send_upload, generate_filename, remove_upload
+from app.upload import get_upload_path, send_upload, generate_filename, remove_upload, get_extension
 from app.db import get_db, get_service, get_payment
 
 bp = Blueprint('payment', __name__)
 
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
-
-def get_extension(filename):
-    if '.' in filename:
-        return filename.rsplit('.', 1)[1].lower()
 
 
 @bp.route('/<int:service_id>/payment/new', methods=('GET', 'POST'))
