@@ -9,9 +9,9 @@
 {% block body %}
     <i>Inactive services:
         {% if show_inactive %}
-            <a href="{{ url_for('index.hide_inactive') }}">shown</a>
+            <a href="{{ url_for('index.hide_inactive') }}">hide</a>
         {% else %}
-            <a href="{{ url_for('index.show_inactive') }}">hidden</a>
+            <a href="{{ url_for('index.show_inactive') }}">show</a>
         {% endif %}
     </i><br/>
     <br/>
