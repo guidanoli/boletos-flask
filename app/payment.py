@@ -4,7 +4,8 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, current_app, flash
 
 from app.upload import send_upload, get_extension, store_upload, IMAGE, PDF
-from app.db import get_db, get_service, get_payment
+from app.db import get_db, get_service, get_payment, get_last_payment_for
+from app.time import get_next_payment
 
 bp = Blueprint('payment', __name__)
 
@@ -12,6 +13,8 @@ bp = Blueprint('payment', __name__)
 @bp.route('/<int:service_id>/payment/new', methods=('GET', 'POST'))
 def new(service_id):
     service = get_service(service_id)
+    last_payment = get_last_payment_for(service_id)
+    next_payment = get_next_payment(service, last_payment)
 
     if request.method == 'POST':
         error = None
@@ -44,6 +47,7 @@ def new(service_id):
 
     kwargs = {}
     kwargs['service'] = service
+    kwargs['next_payment'] = next_payment
     kwargs['now'] = datetime.now()
     return render_template('service/payment/new.html', **kwargs)
 

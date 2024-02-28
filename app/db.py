@@ -80,6 +80,23 @@ def get_payments_for(service_id):
     return payments
 
 
+def get_last_payment_for(service_id):
+    """Returns None if service has no payments"""
+    db = get_db()
+    payment = db.execute(
+        '''
+        SELECT year, month
+        FROM payment
+        WHERE service_id = ?
+        ORDER BY year DESC, month DESC
+        LIMIT 1
+        ''',
+        (service_id, )
+    ).fetchone()
+
+    return payment
+
+
 def get_payment(service_id, year, month):
     db = get_db()
     payment = db.execute(
