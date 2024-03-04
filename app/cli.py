@@ -1,6 +1,7 @@
 import os
 from flask import current_app
 import click
+import tarfile
 
 from app.db import get_db, get_uploads
 from app.upload import list_upload_dir, get_upload_path, generate_filename
@@ -47,7 +48,20 @@ def generate_upload_name_command(ext):
     click.echo('Path: {}'.format(filepath))
 
 
+def backup(output_file):
+    with tarfile.open(output_file, mode='x:xz') as tar:
+        tar.add(current_app.instance_path)
+
+@click.command('backup')
+@click.option('--output-file', default='boletos.tar.xz')
+def backup_command(output_file):
+    """Store a backup of the application instance directory."""
+    backup(output_file)
+    click.echo('Backup stored in {}.'.format(output_file))
+
+
 def init_app(app):
     app.cli.add_command(init_db_command)
     app.cli.add_command(prune_uploads_command)
     app.cli.add_command(generate_upload_name_command)
+    app.cli.add_command(backup_command)
