@@ -16,21 +16,20 @@ pip install -r requirements.txt
 flask init-db
 ```
 
-## Run server in debug mode
+## Run server
 
 ```sh
-flask run --debug
+flask run
 ```
 
 ## Configure system to always run server in debug mode on startup
 
-Here's a step-by-step guide for configuring your system to run the server in debug mode on startup.
+Here's a step-by-step guide for configuring your system to run the server on startup.
 Superuser privileges might be necessary to run some commands.
 
 1. Create the following file under `/etc/systemd/system/boletos.service`.
 You can replace `USERNAME` with your username,
-`REPOSITORY-PATH` with the path to the copy of this repository on your local machine,
-and `PORT` to some unused port on your machine.
+and `REPOSITORY-PATH` with the path to the copy of this repository on your local machine.
 
 ```service
 [Unit]
@@ -40,7 +39,7 @@ After=network.target
 [Service]
 User=<USERNAME>
 WorkingDirectory=<REPOSITORY-PATH>
-ExecStart=<REPOSITORY-PATH>/.venv/bin/flask run -p <PORT> --debug
+ExecStart=<REPOSITORY-PATH>/.venv/bin/flask run
 Restart=always
 
 [Install]
