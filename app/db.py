@@ -37,12 +37,12 @@ def get_services():
         (SELECT s.service_id
         FROM payment p JOIN service s
         ON p.service_id = s.service_id
-        WHERE year = ?
-        AND (frequency = 'y' OR month = ?)) AS paid
+        WHERE (frequency = 'y' AND year = ?)
+        OR (frequency = 'm' AND year = ? AND month = ?)) AS paid
         FROM service
         ORDER BY name
         ''',
-        (now.year, now.month)
+        (now.year, now.year, now.month)
     ).fetchall()
 
     return services
