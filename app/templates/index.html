@@ -7,25 +7,40 @@
 {% block title %}Services{% endblock %}
 
 {% block body %}
-    <i>Inactive services:
-        {% if show_inactive %}
-            <a href="{{ url_for('index.hide_inactive') }}">hide</a>
-        {% else %}
-            <a href="{{ url_for('index.show_inactive') }}">show</a>
-        {% endif %}
-    </i><br/>
-    <br/>
     <a href="{{ url_for('service.new') }}">New service</a><br/>
+    {% if unpaid_services %}
+        <h2>To be paid 🕒</h2>
+    {% endif %}
     <ul>
-        {% for service in services if show_inactive or service.active %}
+        {% for unpaid_service in unpaid_services %}
             <li>
-                {{ macros.service_as_linked_text(service) }}
-                {% if not service.active %}
-                    <span class="warning">(inactive)</span>
-                {% elif not service.paid %}
-                    <span class="warning">(due)</span>
+                {{ macros.service_as_linked_text(unpaid_service.service) }}
+                {% if unpaid_service.message %}
+                    <span
+                        {% if unpaid_service.is_message_urgent %}
+                                class="warning"
+                        {% endif %}
+                    >
+                        ({{ unpaid_service.message }})
+                    </span>
                 {% endif %}
             </li>
+        {% endfor %}
+    </ul>
+    {% if paid_services %}
+        <h2>Paid ✅</h2>
+    {% endif %}
+    <ul>
+        {% for service in paid_services %}
+            <li>{{ macros.service_as_linked_text(service) }}</li>
+        {% endfor %}
+    </ul>
+    {% if inactive_services %}
+        <h2>Inactive 💤</h2>
+    {% endif %}
+    <ul>
+        {% for service in inactive_services %}
+            <li>{{ macros.service_as_linked_text(service) }}</li>
         {% endfor %}
     </ul>
 {% endblock %}
