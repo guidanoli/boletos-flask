@@ -11,9 +11,7 @@
     <br/>
     <form method="post" enctype="multipart/form-data">
         * Date:
-        <input type="number" name="year" size="6" value="{{ request.form.year or next_payment.year or now.year }}">
-        /
-        <input type="number" name="month" min="1" max="12" size="4" value="{{ request.form.month or next_payment.month or now.month }}"><br/>
+        <input type="date" name="date" value="{{ request.form.date or payment_date }}"><br/>
         <br/>
         <label for="file">* File:</label>
         <input type="file" name="file" accept="application/pdf,image/*" required /><br/>

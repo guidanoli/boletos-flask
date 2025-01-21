@@ -72,7 +72,7 @@ def get_payments_for(service_id):
         SELECT *
         FROM payment
         WHERE service_id = ?
-        ORDER BY year DESC, month DESC
+        ORDER BY year DESC, month DESC, day DESC
         ''',
         (service_id, )
     ).fetchall()
@@ -80,21 +80,21 @@ def get_payments_for(service_id):
     return payments
 
 
-def get_last_payment_for(service_id):
+def get_last_payments_for(service_id):
     """Returns None if service has no payments"""
     db = get_db()
-    payment = db.execute(
+    payments = db.execute(
         '''
-        SELECT year, month
+        SELECT *
         FROM payment
         WHERE service_id = ?
-        ORDER BY year DESC, month DESC
-        LIMIT 1
+        ORDER BY year DESC, month DESC, day DESC
+        LIMIT 6
         ''',
         (service_id, )
-    ).fetchone()
+    ).fetchall()
 
-    return payment
+    return payments
 
 
 def get_payment(service_id, year, month):

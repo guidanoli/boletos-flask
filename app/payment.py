@@ -1,11 +1,11 @@
 import os
-from datetime import datetime
+from datetime import date
 
 from flask import Blueprint, render_template, request, redirect, url_for, current_app, flash
 
 from app.upload import send_upload, get_extension, store_upload, IMAGE, PDF
-from app.db import get_db, get_service, get_payment, get_last_payment_for
-from app.time import get_next_payment
+from app.db import get_db, get_service, get_payment, get_last_payments_for
+from app.time import estimate_next_payment_date
 
 bp = Blueprint('payment', __name__)
 
@@ -13,14 +13,13 @@ bp = Blueprint('payment', __name__)
 @bp.route('/<int:service_id>/payment/new', methods=('GET', 'POST'))
 def new(service_id):
     service = get_service(service_id)
-    last_payment = get_last_payment_for(service_id)
-    next_payment = get_next_payment(service, last_payment)
+    last_payments = get_last_payments_for(service_id)
+    estimated_payment_date = estimate_next_payment_date(service, last_payments)
 
     if request.method == 'POST':
         error = None
 
-        year = int(request.form['year'])
-        month = int(request.form['month'])
+        payment_date = date.fromisoformat(request.form['date'])
         file = request.files['file']
 
         filename = store_upload(file, PDF | IMAGE)
@@ -32,10 +31,10 @@ def new(service_id):
             try:
                 db.execute(
                     '''
-                    INSERT INTO payment (service_id, year, month, filename)
-                    VALUES (?, ?, ?, ?)
+                    INSERT INTO payment (service_id, year, month, day, filename)
+                    VALUES (?, ?, ?, ?, ?)
                     ''',
-                    (service_id, year, month, filename)
+                    (service_id, payment_date.year, payment_date.month, payment_date.day, filename)
                 )
                 db.commit()
             except db.IntegrityError as e:
@@ -47,8 +46,7 @@ def new(service_id):
 
     kwargs = {}
     kwargs['service'] = service
-    kwargs['next_payment'] = next_payment
-    kwargs['now'] = datetime.now()
+    kwargs['payment_date'] = str(estimated_payment_date or date.today())
     return render_template('service/payment/new.html', **kwargs)
 
 

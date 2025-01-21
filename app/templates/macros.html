@@ -11,11 +11,15 @@
 {% endmacro %}
 
 {%- macro payment_as_text(payment) %}
-{{ '%04d/%02d' | format(payment.year, payment.month) }}
+{% if payment.day %}
+    {{ '%04d/%02d/%02d' | format(payment.year, payment.month, payment.day) }}
+{% else %}
+    {{ '%04d/%02d' | format(payment.year, payment.month) }}
+{% endif %}
 {% endmacro %}
 
 {%- macro payment_as_url(payment) %}
-{{ url_for('service.payment.index', service_id=payment.service_id, year=payment.year, month=payment.month) }}
+{{ url_for('service.payment.index', service_id=payment.service_id, year=payment.year, month=payment.month, day=payment.day) }}
 {% endmacro %}
 
 {%- macro payment_as_linked_text(payment) %}
