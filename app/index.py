@@ -45,7 +45,7 @@ def format_unpaid_service_message(unpaid_service):
 def is_message_urgent(unpaid_service):
     days = unpaid_service['days']
     if days is not None:
-        return days <= 7
+        return days <= 0
     else:
         return False
 
