@@ -29,9 +29,15 @@ def format_unpaid_service_message(unpaid_service):
     days = unpaid_service['days']
     if days is not None:
         if days > 0:
-            return f'in {days} days'
+            if days == 1:
+                return 'tomorrow'
+            else:
+                return f'in {days} days'
         elif days < 0:
-            return f'{-days} days ago'
+            if days == -1:
+                return 'yesterday'
+            else:
+                return f'{-days} days ago'
         else:
             return 'today'
 
