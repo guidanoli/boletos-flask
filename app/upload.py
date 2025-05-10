@@ -2,6 +2,7 @@ import os
 import uuid
 
 from flask import current_app, send_from_directory
+from PyPDF2 import PdfReader, PdfWriter
 
 
 IMAGE = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -36,12 +37,35 @@ def get_extension(filename):
         return filename.rsplit('.', 1)[1].lower()
 
 
-def store_upload(file, allowed_extensions):
-    ext = get_extension(file.filename)
-    if ext in allowed_extensions:
-        filename, filepath = generate_filename(ext)
-        file.save(filepath)
-        return filename
+def store_upload(file, allowed_extensions, password=None):
+    ext = get_extension(file.filename).lower()
+    if ext not in allowed_extensions:
+        return None, "Unsupported extension"
+
+    filename, filepath = generate_filename(ext)
+    file.save(filepath)
+
+    if ext == "pdf":
+        from PyPDF2 import PdfReader, PdfWriter
+        try:
+            reader = PdfReader(filepath)
+            if reader.is_encrypted:
+                if password is None:
+                    return None, "Missing password"
+                if not reader.decrypt(password):
+                    return None, "Incorrect password"
+                writer = PdfWriter()
+                for page in reader.pages:
+                    writer.add_page(page)
+                new_filename, new_filepath = generate_filename("pdf")
+                with open(new_filepath, "wb") as f:
+                    writer.write(f)
+                os.remove(filepath)
+                return new_filename, None
+        except Exception as e:
+            return None, "Error processing PDF"
+
+    return filename, None
 
 
 def list_upload_dir():

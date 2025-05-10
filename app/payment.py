@@ -21,10 +21,9 @@ def new(service_id):
 
         payment_date = date.fromisoformat(request.form['date'])
         file = request.files['file']
+        password = request.form.get("pdf_password")
 
-        filename = store_upload(file, PDF | IMAGE)
-        if not filename:
-            error = 'Invalid file.'
+        filename, error = store_upload(file, PDF | IMAGE, password)
 
         if error is None:
             db = get_db()

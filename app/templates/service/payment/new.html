@@ -6,6 +6,11 @@
 
 {% block title %}New payment{% endblock %}
 
+{% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+{% endblock %}
+
 {% block body %}
     <i>Service: {{ macros.service_as_text(service) | trim }}</i><br/>
     <br/>
@@ -18,4 +23,73 @@
         <br/>
         <input type="submit" value="Submit">
     </form>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.querySelector('input[type="file"]');
+        const form = document.querySelector('form');
+
+        // Create wrapper div to hold label and input side by side
+        const passwordWrapper = document.createElement('div');
+        passwordWrapper.style.display = 'flex';
+        passwordWrapper.style.alignItems = 'center';
+        passwordWrapper.style.gap = '0.5em';  // spacing between label and input
+        passwordWrapper.style.marginBottom = '1em'; // spacing below the whole group
+
+        // Create label and input
+        const passwordLabel = document.createElement('label');
+        passwordLabel.textContent = "* PDF Password:";
+        passwordLabel.setAttribute("for", "pdf-password");
+
+        const passwordInput = document.createElement('input');
+        passwordInput.type = 'text';
+        passwordInput.name = 'pdf_password';
+        passwordInput.id = 'pdf-password';
+        passwordInput.placeholder = 'Enter password';
+
+        // Hide initially
+        passwordWrapper.style.display = 'none';
+
+        // Append label and input to wrapper
+        passwordWrapper.appendChild(passwordLabel);
+        passwordWrapper.appendChild(passwordInput);
+
+        // Insert wrapper into form
+        form.insertBefore(passwordWrapper, form.querySelector('input[type="submit"]'));
+
+        // When file changes
+        fileInput.addEventListener('change', async () => {
+            const file = fileInput.files[0];
+            passwordWrapper.style.display = 'none'; // reset visibility
+
+            if (file && file.type === 'application/pdf') {
+                const arrayBuffer = await file.arrayBuffer();
+                try {
+                    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                    await loadingTask.promise;
+                } catch (err) {
+                    if (err?.name === 'PasswordException') {
+                        const lastPassword = localStorage.getItem('lastPdfPassword');
+                        if (lastPassword) {
+                            passwordInput.value = lastPassword;
+                        } else {
+                            passwordInput.value = '';
+                        }
+                        passwordWrapper.style.display = 'flex';
+                        passwordInput.focus();
+                    } else {
+                        console.error("Unexpected error reading PDF:", err);
+                    }
+                }
+            }
+        });
+
+        // When a POST request is submitted
+        form.addEventListener('submit', () => {
+            const password = passwordInput.value;
+            if (password) {
+                localStorage.setItem('lastPdfPassword', password);
+            }
+        });
+    });
+    </script>
 {% endblock %}

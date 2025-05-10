@@ -24,9 +24,7 @@ def new():
         elif not frequency:
             error = 'A frequency is required.'
         elif file:
-            filename = store_upload(file, IMAGE)
-            if not filename:
-                error = 'Invalid file.'
+            filename, error = store_upload(file, IMAGE)
 
         if error is None:
             db = get_db()
