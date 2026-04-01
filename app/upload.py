@@ -63,7 +63,7 @@ def store_upload(file, allowed_extensions, password=None):
                 os.remove(filepath)
                 return new_filename, None
         except Exception as e:
-            return None, "Error processing PDF"
+            return None, "Error processing PDF: " + str(e)
 
     return filename, None
 
