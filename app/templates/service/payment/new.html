@@ -36,6 +36,67 @@
         const fileInput = document.querySelector('input[type="file"]');
         const form = document.querySelector('form');
 
+        // PDF passwords are remembered per service, since a service might
+        // encrypt its boletos with a different secret than the usual first N
+        // digits of some document ID.
+        const PASSWORD_KEY_PREFIX = 'pdfPassword:service:';
+        const PASSWORD_KEY = PASSWORD_KEY_PREFIX + {{ service.service_id | tojson }};
+        const LEGACY_PASSWORD_KEY = 'lastPdfPassword';
+
+        // Passwords remembered for every other service, most recent last.
+        function getKnownPasswords() {
+            const passwords = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith(PASSWORD_KEY_PREFIX) && key !== PASSWORD_KEY) {
+                    const password = localStorage.getItem(key);
+                    if (password) {
+                        passwords.push(password);
+                    }
+                }
+            }
+            const legacyPassword = localStorage.getItem(LEGACY_PASSWORD_KEY);
+            if (legacyPassword) {
+                passwords.push(legacyPassword);
+            }
+            return passwords;
+        }
+
+        // Services with no password yet fall back to the most common password
+        // used by the other services, which is likely to be the right guess.
+        function guessPassword() {
+            const counts = new Map();
+            for (const password of getKnownPasswords()) {
+                counts.set(password, (counts.get(password) || 0) + 1);
+            }
+            let guess = '';
+            let bestCount = 0;
+            for (const [password, count] of counts) {
+                if (count >= bestCount) {
+                    guess = password;
+                    bestCount = count;
+                }
+            }
+            return guess;
+        }
+
+        function loadPassword() {
+            try {
+                return localStorage.getItem(PASSWORD_KEY) || guessPassword();
+            } catch (err) {
+                console.error("Could not read stored PDF password:", err);
+                return '';
+            }
+        }
+
+        function savePassword(password) {
+            try {
+                localStorage.setItem(PASSWORD_KEY, password);
+            } catch (err) {
+                console.error("Could not store PDF password:", err);
+            }
+        }
+
         // Create wrapper div to hold label and input side by side
         const passwordWrapper = document.createElement('div');
         passwordWrapper.style.display = 'flex';
@@ -76,12 +137,7 @@
                     await loadingTask.promise;
                 } catch (err) {
                     if (err?.name === 'PasswordException') {
-                        const lastPassword = localStorage.getItem('lastPdfPassword');
-                        if (lastPassword) {
-                            passwordInput.value = lastPassword;
-                        } else {
-                            passwordInput.value = '';
-                        }
+                        passwordInput.value = loadPassword();
                         passwordWrapper.style.display = 'flex';
                         passwordInput.focus();
                     } else {
@@ -95,7 +151,7 @@
         form.addEventListener('submit', () => {
             const password = passwordInput.value;
             if (password) {
-                localStorage.setItem('lastPdfPassword', password);
+                savePassword(password);
             }
         });
     });
